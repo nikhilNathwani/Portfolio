@@ -27,8 +27,11 @@
 			var rad= rectHeight/3;
 			var togRad= 25;
 			var zoomRad= 120;
+			var helpRad= 40;
+			var helpPadY= 5;
+			var helpPadX= 30;
 			var togPadY= 5;
-			var togPadX= 30;
+			var togPadX= helpPadX + 2*helpRad + 10;
 			var playerTextPad= 5;
 			var togSpace= 10;
 			var togHeight= 4*(togRad+togPadY) + 60;
@@ -38,7 +41,7 @@
 				toggleClicked.push(0);
 			}
 			
-			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#F26532", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
+			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#1D6173", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
 
 			//Create SVG element
 			var svg= d3.select("body")
@@ -146,7 +149,6 @@
 					
 					
 					
-					
 					/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TWO AXES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 					svg.append("g")
 						.attr("class", "axisTop")
@@ -177,28 +179,6 @@
 						.call(xAxisBottom);
 						
 						
-						
-					/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VERTICAL LINES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-					/*xIntercepts= [];
-					for(i=firstYear+(5-firstYear%5); i<=2014; i= i+5) {
-						xIntercepts.push(i);
-					}
-					svg.selectAll("line")
-						.data(xIntercepts)
-						.enter()
-						.append("line")
-						.attr("x1", function(d) {
-								return graphStartX+150+rad+(d-firstYear)*2*rad;
-							})
-						.attr("x2", function(d) {
-								return graphStartX+150+rad+(d-firstYear)*2*rad;
-							})
-						.attr("y1",togHeight)
-						.attr("y2",togHeight+rectHeight*numRects)
-						.attr("stroke","#2B6689")
-						.attr("stroke-width",1.5)*/
-						
-					
 					
 					/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DOTS ON GRAPH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/									
 					
