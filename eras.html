@@ -19,29 +19,38 @@
     </head>
     <body>
         <script type="text/javascript">
-            //Width and height
+		
+            //SVG sizings
             var w= 2500;
-            var h= 1300;
+            var h= 2000;
 			var margin=20;
-			var rectHeight= h/60;
+			
+			//Table Sizings
+			var rectHeight= h/100;
+			var playerTextPad= 5;
 			var rad= rectHeight/3;
-			var togRad= 25;
 			var zoomRad= 120;
+			
+			//Help button sizings
 			var helpRad= 40;
 			var helpPadY= 5;
 			var helpPadX= 30;
+			
+			//Toggle sizings 
+			var togRad= 25;
 			var togPadY= 5;
-			var togPadX= helpPadX + 2*helpRad + 10;
-			var playerTextPad= 5;
+			var togPadX= 5;
 			var togSpace= 10;
 			var togHeight= 4*(togRad+togPadY) + 60;
 			var togWidth= 15*(2*togRad+togSpace)+togRad;
+			
+			//Toggle highlighting
 			var toggleClicked= []; //used in keeping toggle circles highlighted
 			for(i=0;i<30;i++){
 				toggleClicked.push(0);
 			}
 			
-			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#1D6173", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
+			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#1E6478", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
 
 			//Create SVG element
 			var svg= d3.select("body")
@@ -260,12 +269,15 @@
 							toggleClicked[i]= 0;
 							return except==i ? 5 : 0;
 						})
+					
+					svg.select("g.helpButton").select("circle")
+											.attr("stroke-width",0)
 				}
 
 				//create top bar of 2014 playoff teams
 				toggle= svg.append("svg")
 							.attr("class","toggle")
-							.attr("x",0)
+							.attr("x",helpPadX + 2*helpRad + togSpace)
 							.attr("y",togPadY)
 							.attr("width", togWidth)
 							.attr("height", togHeight)
@@ -282,7 +294,7 @@
 								return togPadX + togRad + (i%15)*(2*togRad+togSpace);
 							})
 					.attr("cy", function(d,i){
-						return i<15 ? togPadY + togRad : 2*togSpace + 3*togRad
+						return i<15 ? togPadY + togRad : togPadY + togSpace + 3*togRad
 					})
 					.attr("r", togRad)
 					.attr("fill", function(d) {
@@ -295,7 +307,7 @@
 								return togPadX + togRad + (i%15)*(2*togRad+togSpace);
 							})
 					.attr("y", function(d,i){
-						return i<15 ? togPadY + togRad : 2*togSpace + 3*togRad
+						return i<15 ? togPadY + togRad : togPadY + togSpace + 3*togRad
 					})
 					.attr("font-size",togRad/2)
 					.attr("font-family","sans-serif")
@@ -318,11 +330,56 @@
 										toggleClicked[i]= 1;
 										switchTeam(i);
 									});
+							
+				
+						
+				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HELP BUTTON ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+				function showHelp() {
+					unSelectToggles(-1);
+					svg.select("g.helpButton").select("circle")
+												.attr("stroke-width",5)
+												.attr("stroke",d3.rgb("#d8bfd8").darker(1));
+					
+					/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ REMOVING OLD DATA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+					svg.select("g.allRows")
+						.remove()
+					svg.select("line")
+						.remove()
+					svg.select("g.allPlayerSeasons")
+						.remove()
+					svg.selectAll("#axis")
+						.remove()
+						
+					return;
+				}
+				
+				help= svg.append("g")
+						.attr("class","helpButton")
+						.on("click", function() {
+							showHelp()
+						})
+				
+				help.append("circle")
+					.attr("cx",helpPadX + helpRad)
+					.attr("cy",togPadY+2*togRad+togSpace)
+					.attr("r", helpRad)
+					.attr("fill","#d8bfd8") //BC8F8F,FA8072
 					
 					
+				help.append("text")
+					.attr("x",helpPadX + helpRad)
+					.attr("y",togPadY+2*togRad+togSpace)
+					.attr("font-size",helpRad)
+					.attr("font-family","sans-serif")
+					.attr("fill","white")
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central")
+					.text("?")
+					
+				
 						
 				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ LEGEND ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-				legendX= togWidth+40;
+				legendX= 2*helpRad + togWidth + 50;
 				legendY= togPadY+6;
 				legendWidth= 175;
 				legendHeight= 115;

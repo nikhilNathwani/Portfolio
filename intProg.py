@@ -1,7 +1,12 @@
 from winShare import *
+from cvxopt import matrix, solvers
+from cvxopt.glpk import ilp
+import json
+import time
 
 reignsByYear= {} #{year : [list of reigns]}
 reignDict= {} #{reign : index}
+indexToReign= {} #{index : reign}
 
 class Reign:
 	def __init__(self,p,s,e):
@@ -49,9 +54,38 @@ def firstYear(team):
 			firstYear= currYear
 	return firstYear
 
+def getStatLine(team,player,year):
+	urls= getURLsOfTeam(team)
+	url= ""
+	for u in urls:
+		if str(year) in u:
+			url= u
+	currentDir= os.getcwd()
+	lists= csvToLists((currentDir + '/' + team + '/' + urlToFilename(url)))
 
-def setReignsByYear(team):
-	global reignsByYear, reignDict
+	seasonLine= {}
+	seasonLine["name"]=player
+	seasonLine["season"]= "\'"+str(year-1)[-2:]+"-\'"+str(year)[-2:]
+	seasonLine["year"]= year
+	for lst in lists:
+		if lst[0]==player:
+			seasonLine["teamURL"]= lst[2]
+			seasonLine["playerURL"]=lst[1]
+			seasonLine["winShares"]= lst[3]
+			seasonLine["winSharePct"]= lst[4]
+			return seasonLine
+	
+	seasonLine["teamURL"]= lst[2]
+	seasonLine["playerURL"]=lst[1]
+	seasonLine["winShares"]= -1
+	seasonLine["winSharePct"]= -1
+	return seasonLine
+
+def transpose(lst):
+	return [list(attr) for attr in zip(*lst)]
+
+def setReignsByYear(team, cutoff):
+	global reignsByYear, reignDict, indexToReign
 	currentDir= os.getcwd()
 	urls= getURLsOfTeam(team)[::-1] #reverses list
 
@@ -66,7 +100,7 @@ def setReignsByYear(team):
 
 		if currYear != 2015:
 			#bests= {player : [stats]}
-			bests= getBestWinSharePlayers(currentDir + '/' + team + '/' + urlToFilename(url),0.75)
+			bests= getBestWinSharePlayers(currentDir + '/' + team + '/' + urlToFilename(url),cutoff)
 			bests= [(k,v) for (k,v) in bests.iteritems() if k != "all"]
 			bests= sorted(bests, key=lambda tup: float(tup[1]), reverse=True)
 
@@ -90,6 +124,7 @@ def setReignsByYear(team):
 		yrEnd= reign[-1][0]
 		r= Reign(playerName,yrStart,yrEnd)
 		reignDict[r]= index
+		indexToReign[index]= r
 		index += 1
 		for yr in range(yrStart,yrEnd+1):
 			reignsByYear[yr]= reignsByYear.get(yr,[]) + [r]
@@ -98,7 +133,7 @@ def setReignsByYear(team):
 	#print [(k,[r.player for r in v]) for (k,v) in reignsByYear.iteritems()]
 
 
-def genConstraintMatrix():
+def genConstraintMatrix(finalCutoff):
 	yearEntries= sorted(reignsByYear.iteritems(), key=lambda tup: tup[0])
 	numReigns= len(reignDict.keys())
 	#print yearEntries
@@ -106,13 +141,64 @@ def genConstraintMatrix():
 	for (yr,reigns) in yearEntries:
 		coeffs= [0]*numReigns
 		for r in reigns:
-			coeffs[reignDict[r]]= r.wsByYear[yr-r.start]
+			coeffs[reignDict[r]]= (-1)*r.wsByYear[yr-r.start]
 		constraints.append(coeffs)
-	print constraints, len(constraints), 2015-1947
-	return constraints
+	#print constraints, len(constraints), 2015-1947
+	#print matrix(constraints), matrix([0.4]*len(constraints)), matrix([1.0]*numReigns), matrix(constraints).T 
+	#print numReigns
+	return matrix([1.0]*numReigns),matrix(constraints).T, matrix([-finalCutoff]*len(constraints)), matrix([0.0]*numReigns).T, matrix([0.0]), set(range(numReigns)),set(range(numReigns)) 
+
+
+def solveIP(team, initialCutoff, finalCutoff):
+	global reignsByYear, reignDict, indexToReign
+	setReignsByYear("BOS", initialCutoff)
+	c,G,h,A,b,I,B= genConstraintMatrix(finalCutoff)
+	#sol=solvers.lp(c,A,b)
+	(status,x)= ilp(c,G,h,A,b,I,B)
+	print "Num reigns used", sum(list(x))
+	#x has value for each reign: 1 if reign should be included, 0 otherwise
+	reigns= sorted([(indexToReign[i].player,indexToReign[i].start,indexToReign[i].end) for i,val in enumerate(x) if val==1],key=lambda tup: tup[2])
+
+	playerStats= []
+	for player,start,end in reigns:
+		entry= {"player": player, "stats": []}
+		for year in range(start,end+1):
+			seasonLine= getStatLine(team,player,year)
+			entry["stats"].append(seasonLine)
+		playerStats.append(entry)
+
+	reignsByYear= {}
+	reignDict= {}
+	indexToReign= {}
+
+	with open(os.getcwd()+'/eras.json', 'w') as outfile:
+		json.dump(playerStats, outfile)
+
+	return playerStats
+
+
 
 	
-	
+def allDataToJSON():
+	currentDir= os.getcwd()
+	jsonList= []
+
+	teamNames= "BOS"#getImmediateSubdirectories(currentDir)
+	teamNames.remove("d3")
+	for team in teamNames:
+		info= {"team":team, "eras": [], "confFinal": [], "lossFinal": [], "champion": []}
+		print team
+		eras= calcEras(team)
+		for (p,stats) in eras:
+			info["eras"].append({"player":p, "stats":stats})
+		cf,lf,c= getSuccessfulYears(team)
+		info["confFinal"]= cf
+		info["lossFinal"]= lf
+		info["champion"]= c
+		jsonList.append(info)
+
+	with open(currentDir+'/erasIP.json', 'w') as outfile:
+		json.dump(jsonList, outfile)	
 
 
 
@@ -122,7 +208,6 @@ def genConstraintMatrix():
 
 
 if __name__ == "__main__":
-	setReignsByYear("BOS")
-	genConstraintMatrix()
-	#print firstYear("BOS")
-	#print getReigns([0,1,2,3,5,6,9,10,11,12,18,23,24])
+	start= time.time()
+	print solveIP("BOS",0.5,0.4)
+	print "Time taken:",time.time()-start
