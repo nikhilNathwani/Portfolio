@@ -5,29 +5,56 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <title>Nikhil Nathwani</title>
     <link type="text/css" rel="stylesheet" href="nikhil.css" />
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
 
 	<div id="allcontent">
-	  <div id="header">
-		<div id="header1">
-		  Hi, I'm Nikhil.
+	
+		<div id="header">
+		  
+			<div id="header1">
+				Hi, I'm Nikhil
+				
+				<i class="fa fa-volume-up" id= "pronounce" onClick="PlaySound('pronounce.mp3')"></i>
+				
+				<script type="text/javascript">
+
+					function PlaySound(surl) {
+					
+					document.getElementById("pronounce").innerHTML=
+					
+					"<embed src='"+surl+"' hidden=true autostart=true loop=false>";
+					
+					}
+					
+				</script>
+
+			</div>
+			<div id="subtitle">
+				<div id= "inlines">
+					I play
+				</div>
+				<div id= "paren">
+					(with)
+				</div>
+				<div id= "inlines">
+					professional basketball
+				</div>
+				<div id= "paren">
+					(data).
+				</div>
+			</div>
+			
 		</div>
-		<div id="subtitle">
-		  <div id= "inlines">
-			I play
-		  </div>
-		  <div id= "paren">
-			(with)
-		  </div>
-		  <div id= "inlines">
-			professional basketball
-		  </div>
-		  <div id= "paren">
-			(data).
-		  </div>
+		
+		<div id="mainContent">
+		  
+			<a href="../eras.html"> <img src="eras.png" alt="Eras" id= "link1"/></a>
+			
 		</div>
-	  </div>
+		
 	</div>
+	
   </body>
 </html>
