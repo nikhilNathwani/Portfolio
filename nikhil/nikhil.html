@@ -5,30 +5,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <title>Nikhil Nathwani</title>
     <link type="text/css" rel="stylesheet" href="nikhil.css" />
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">	
+	
   </head>
   <body>
 
 	<div id="allcontent">
 	
 		<div id="header">
-		  
+		
 			<div id="header1">
 				Hi, I'm Nikhil
-				
-				<i class="fa fa-volume-up" id= "pronounce" onClick="PlaySound('pronounce.mp3')"></i>
-				
-				<script type="text/javascript">
-
-					function PlaySound(surl) {
-					
-					document.getElementById("pronounce").innerHTML=
-					
-					"<embed src='"+surl+"' hidden=true autostart=true loop=false>";
-					
-					}
-					
-				</script>
+				<audio id="mp3" src="pronounce.mp3"></audio>
+				<a id="pronounce" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
 
 			</div>
 			<div id="subtitle">
