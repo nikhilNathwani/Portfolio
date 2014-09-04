@@ -1,36 +1,14 @@
-html, body {
-	background-color: #CCE5FF;
+body {
+	background-color: #E4F1FF;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	margin: 0px;
-	padding: 0px;
 }
 
-#spotlight {
-	background-color: #99CCFF;
-	width: 80%;
-	margin-left: 10%;
-	position: absolute;
-}
-
-.fa fa-chevron-circle-left {
-	font-size: 32px;
-	display: inline;
-}
-
-#spotlightTitle {
-	fill: white;
-	font-size: 200%;
-}
-
-#spotlightSubtitle {
-	fill: white;
-	font-size: 100%;
-}
-
-#projects {
+#mainContent {
 	margin-left: 10%;
 	padding-bottom: 0px;
-	height: 1500px;
+	height: 500px;
+	overflow: auto;
 	width: 80%;
 	text-align: center;
 	background-color: #FFCC99;
@@ -60,7 +38,7 @@ html, body {
 
 #inlines {
 	width: 100%;
-	height: 78px;
+	height: 50px;
 	text-align: center;
 	color: #ffffff;
 	font-size: 200%;
@@ -69,14 +47,28 @@ html, body {
 
 #paren {
 	width: 100%;
-	height: 78px;
+	height: 50px;
 	text-align: center;
 	color: #FF8000;
 	font-size: 200%;
 	display: inline;
 }
 
-p {
-	color: #ffffff;
-	font-style: italic;
+#link1 {
+	margin-left: 10%;
+	margin-top: 10%;
+	float: left;
+	width: 40%;
+	height: auto;
 }
+
+h1 {
+	color: #eeeeee;
+}
+
+.period {
+	display: inline;
+	color: #eeeeee;
+	padding-left: 0px;
+}
+

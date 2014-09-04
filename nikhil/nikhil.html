@@ -4,46 +4,265 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <title>Nikhil Nathwani</title>
+	<script type="text/javascript" src="d3/d3.js"></script>
     <link type="text/css" rel="stylesheet" href="nikhil.css" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">	
 	
   </head>
   <body>
-
-	<div id="allcontent">
+	  <div id="header1">
+		  Hi, I'm Nikhil
+		  <audio id="mp3" src="pronounce.mp3"></audio>
+		  <a id="pronounce" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
+	  </div>
+	  <div id="subtitle">
+		  <div id= "inlines">
+			  I play
+		  </div>
+		  <div id= "paren">
+			  (with)
+		  </div>
+		  <div id= "inlines">
+			  professional basketball
+		  </div>
+		  <div id= "paren">
+			  (data).
+		  </div>
+	  </div>
+  
+	<script type="text/javascript">
+		var linkImages= ["eras/eras.png","eras/eras.png"]
+		var projMargin= 40;
+		var projTopPad= 50;
+		var projLeftPad= 30;
+		var spotlightVisible= false;
+		var spotlightHeight= 400;
 	
-		<div id="header">
+		<!------------------------------------------- INITIALIZE THREE MAIN SVGs-------------------------------------------->
+	
+		var spotlight= d3.select("body")
+					.append("svg")
+					.attr("id","spotlight")
+					.attr("y",0)
+					.attr("height",0)
+						
+		var projects= d3.select("body")
+						.append("svg")
+						.attr("id","projects")
+						.attr("x","50%")
+						.attr("y",0)
+						.attr("height", 250*Math.floor((linkImages.length+1)/2) + 2*projMargin)
+						
 		
-			<div id="header1">
-				Hi, I'm Nikhil
-				<audio id="mp3" src="pronounce.mp3"></audio>
-				<a id="pronounce" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
+		<!--------------------------------------------- SPOTILIGHT NAV BUTTONS --------------------------------------------->
+		spotlight.append('text')
+				  .attr("id","goLeft")
+				  .attr('font-family', 'FontAwesome')
+				  .attr('font-size', 20)
+				  .attr("x","90%")
+				  .attr("y","10%")
+				  .attr("fill","white")
+				  .attr("text-anchor","middle")
+				  .attr("dominant-baseline","central")
+				  .text(function(d) { return '\uf137' });
+		
+		spotlight.append('text')
+				  .attr("id","goRight")
+				  .attr('font-family', 'FontAwesome')
+				  .attr('font-size', 20)
+				  .attr("x","90%")
+				  .attr("dx",30)
+				  .attr("y","10%")
+				  .attr("fill","white")
+				  .attr("text-anchor","middle")
+				  .attr("dominant-baseline","central")
+				  .text(function(d) { return '\uf138' });
+				  
+		spotlight.append('text')
+				  .on("click", function() {hideSpotlight()})
+				  .attr("id","hideSpotlight")
+				  .attr('font-family', 'FontAwesome')
+				  .attr('font-size', 20)
+				  .attr("x","90%")
+				  .attr("dx",60)
+				  .attr("y","10%")
+				  .attr("fill","white")
+				  .attr("text-anchor","middle")
+				  .attr("dominant-baseline","central")
+				  .text('\uf057')
+		
+		
+		<!--------------------------------------------- SPOTILIGHT CONTENT ------------------------------------------------->
+		spotlight.append("text")
+				  .attr("id","spotlightTitle")
+				  .attr("x", 40)
+				  .attr("y","9%")
+				  .attr("dominant-baseline","hanging")
+				  .text("Eras of the NBA")
+				  
+		spotlight.append("text")
+				  .attr("id","spotlightSubtitle")
+				  .attr("x", 40)
+				  .attr("y","9%")
+				  .attr("dy",40)
+				  .attr("dominant-baseline","hanging")
+				  .text("A timeline of franchise-defining players for each team.")
+				  
+		spotlight.append("image")
+				  .attr("id","spotlightImage")
+				  .attr("xlink:href","eras/erasLarge.png")
+				  .attr("x", 40)
+				  .attr("y", "30%")
+				  .attr("width",1111/2.2)
+				  .attr("height",560/2.2)
+				  .attr("margin-left",0)
+		
+		
+		<!--------------------------------------------- SPOTILIGHT BUTTONS ------------------------------------------------->
+		
+		/* ENTER THE DATA VISUALIZATION */
+		
+		spotlightButtonData= spotlight.append("g")
+									  .attr("id","spotlightButtonData")
+									  .on("click",function() {
+										  location.href='eras/eras.html';
+										  target="_blank";
+										})
+		
+		spotlightButtonData.append("rect")
+							.attr("x", "60%")
+							.attr("y", "34%")
+							.attr("rx", 10)
+							.attr("ry", 10)
+							.attr("width","35%")
+							.attr("height",40)
+							.attr("fill","#FF8000")
+							
+		spotlightButtonData.append("text")
+							.attr("x", "77.5%")
+							.attr("y", "34%")
+							.attr("dy", 20)
+							.attr("text-anchor","middle")
+							.attr("dominant-baseline","central")
+							.attr("width","35%")
+							.attr("height",40)
+							.attr("fill","white")
+							.text("Enter the data visualization")
 
-			</div>
-			<div id="subtitle">
-				<div id= "inlines">
-					I play
-				</div>
-				<div id= "paren">
-					(with)
-				</div>
-				<div id= "inlines">
-					professional basketball
-				</div>
-				<div id= "paren">
-					(data).
-				</div>
-			</div>
-			
-		</div>
+		spotlight.append("foreignObject")
+				  .attr("id","synopsis")
+				  .attr("width","35%")
+				  .attr("height","100%")
+				  .attr("x","60%")
+				  .attr("y","56%")
+				  .append("xhtml:div")
+				  .append("p")
+				  .attr("font-size",20)
+				  .attr("color","white")
+				  .text("Check out the `Preface' for the story behind this project, and if you're feeling nerdy, the `Math' section outlines the algorithm used to pick the `franchise-definers'.")
 		
-		<div id="mainContent">
-		  
-			<a href="../eras.html"> <img src="eras.png" alt="Eras" id= "link1"/></a>
-			
-		</div>
 		
-	</div>
+		/* GO TO THE PREFACE */
+		
+		spotlightButtonPreface= spotlight.append("g")
+									  .attr("id","spotlightButtonPreface")
+									  .on("click",function() {
+										  location.href='eras/erasPreface.html';
+										  target="_blank";
+										})
+		
+		spotlightButtonPreface.append("rect")
+							  .attr("x", "60%")
+							  .attr("y", "79%")
+							  .attr("rx", 10)
+							  .attr("ry", 10)
+							  .attr("width","15%")
+							  .attr("height",40)
+							  .attr("fill","#FF8000")
+							
+		spotlightButtonPreface.append("text")
+							  .attr("x", "67.5%")
+							  .attr("y", "79%")
+							  .attr("dy", 20)
+							  .attr("text-anchor","middle")
+							  .attr("dominant-baseline","central")
+							  .attr("width","15%")
+							  .attr("height",40)
+							  .attr("fill","white")
+							  .text("Preface")
+		
+		
+		/* SEE THE MATH */
+		
+		spotlightButtonMath= spotlight.append("g")
+									  .attr("id","spotlightButtonMath")
+									  .on("click",function() {
+										  location.href='eras/erasPreface.html';
+										  target="_blank";
+										})
+		
+		spotlightButtonMath.append("rect")
+							  .attr("x", "80%")
+							  .attr("y", "79%")
+							  .attr("rx", 10)
+							  .attr("ry", 10)
+							  .attr("width","15%")
+							  .attr("height",40)
+							  .attr("fill","#FF8000")
+							
+		spotlightButtonMath.append("text")
+							  .attr("x", "87.5%")
+							  .attr("y", "79%")
+							  .attr("dy", 20)
+							  .attr("text-anchor","middle")
+							  .attr("dominant-baseline","central")
+							  .attr("width","15%")
+							  .attr("height",40)
+							  .attr("fill","white")
+							  .text("Math")
+		
+		
+		<!-------------------------------------------- SHOW/HIDE SPOTLIGHT CONTENT ------------------------------------------>
+		function showSpotlight() {
+			spotlightVisible= true;
+			projects.selectAll("image").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))+spotlightHeight; })
+			spotlight.transition().delay(0).duration(500).attr("height",spotlightHeight)
+		}
+		
+		function hideSpotlight() {
+			spotlightVisible= false;
+			projects.selectAll("image").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))-spotlightHeight; })
+			spotlight.transition().delay(0).duration(500).attr("height",0)
+		}
+		
+		
+		<!----------------------------------------------- ADD LINKS TO PROJECTS --------------------------------------------->
+	  
+		projectLinks= projects.selectAll("image")
+							  .data(linkImages)
+							  .enter()
+							  .append("image")
+							  .attr("width", 410)
+							  .attr("height", 200)
+							  .attr("xlink:href","eras/eras.png")
+							  .on("click", function(){
+								  if(!spotlightVisible) {
+									  showSpotlight();
+								  }
+								})
+							  .attr("x",function(d,i) {
+								  return 68 + (i%2)*478;
+								})
+							  .attr("y",function(d,i) {
+								  return 40 + Math.floor(i/2)*248;
+								})
+		
+		
+					
+					
+		
+						
+	</script>
 	
   </body>
 </html>
