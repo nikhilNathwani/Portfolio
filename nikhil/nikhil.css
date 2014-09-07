@@ -30,7 +30,7 @@ html, body {
 #projects {
 	margin-left: 10%;
 	padding-bottom: 0px;
-	height: 1500px;
+	height: 800px;
 	width: 80%;
 	text-align: center;
 	background-color: #FFCC99;
@@ -39,7 +39,7 @@ html, body {
 #header1 {
 	background-color: #FFAA00;
 	width: 100%;
-	height: 120px;
+	height: 100px;
 	padding-top: 40px;
 	text-align: center;
 	color: #ffffff;

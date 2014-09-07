@@ -1,0 +1,80 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage[ruled]{algorithm2e}
+\usetikzlibrary{arrows}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem*{remark}{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
+\begin{document}
+
+\section{Goal}
+The goal is to delineate the distinct eras of each NBA franchise. Taking a player-centric approach, this is equivalent to determining which players define the history of each franchise. I've chosen to quantify a player's worth based on his win share\footnote{A measure that tries to quantify how many regular-season wins an individual accounted for. Complete explanation \href{http://www.basketball-reference.com/about/ws.html}{here}.} percentage\footnote{Simply calculated by dividing an individual's win shares by the sum of the win shares of all members of his team.} (WS\%), because a player with a large percentage of his team's win shares in a given season is likely to be crucial to that era of the franchise. Other metrics could be used to gain different perspectives on a team's history.
+
+The method used to select these ``franchise-definers'' should keep the number of chosen players to a minimum, in order to weed out those who were not true flagships of any particular era. But of course, the obvious superstar players should not be excluded either.
+
+\section{Method}
+Consider an arbitrary team $X$. We would like to determine the set of franchise-defining players for $X$. Let:\\
+
+$P_j=$ the set of players on team $X$ in season $j$.\\ 
+
+
+$w_j(p) = \left\{ \begin{array}{ll}
+		            \text{WS\% of player } p \text{ in season } j & \quad p \in P_j\\
+		            0 & \quad \text{otherwise}
+		        \end{array}
+ 		   \right. $\\
+
+
+
+As a preprocessing step, I use the following algorithm to exclude a number of players that clearly did not have a high enough impact:\\
+
+	\begin{algorithm} [H]
+	\caption{Preprocess($T$)}
+	\For{each season $j$} {
+		Sort $P_j$ in descending order of WS\%\;
+	$V^\prime := V^\prime \cup \{v^\prime\}$\;
+       	\For{each $u \in V$ such that $(u,v) \in E$ (undirected)} {
+	$E^\prime := E^\prime \cup (u,v^\prime)$\;
+	}
+	}
+	return ($G^\prime,k+1$)\;
+	\end{algorithm}
+
+
+To make the problem more tractable and interesting, I impose the following constraints:
+
+\begin{enumerate}
+\item $\forall_j \; P_j \ne \emptyset$ \footnote{I do this because it means JaVale McGee could possibly show up on the Wizard's list of franchise-definers. Unsuccessful eras of franchises need to be remembered, and I never want to forget JaVale's stint in Washington.}.
+\item $\forall_j  \; \sum_{p \in P} w_j(p) \ge t$, where $t$ is a tweakable parameter
+\end{enumerate}
+
+Taking that one step further: to ascertain that every season is well-represented, I'll select FDs in a way that ensures $t\%$ of the total win shares are accounted for each season, where $t$ is a tweakable parameter. 
+
+
+
+\section{IP-Formulation}
+
+$r_{ij} = \left\{ \begin{array}{ll}
+		            1 & \quad \text{reign } i \text{ is selected}\\
+		            0 & \quad \text{otherwise}
+		        \end{array}
+ 		   \right. $
+\\
+\\
+$w_{ij} = \left\{ \begin{array}{ll}
+		            \text{WS\% of player in reign } i \text{ during season } j & \quad j \in R_i\\
+		            0 & \quad \text{otherwise}
+		        \end{array}
+ 		   \right. $
+
+
+
+\end{document}

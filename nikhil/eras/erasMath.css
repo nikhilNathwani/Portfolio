@@ -5,19 +5,9 @@ html, body {
 	padding: 0px;
 }
 
-h1, p {
-	color: #7a8999;
-	margin-left: 20px;
-	width: 95%;
-}
-
-p {
-	word-spacing: 3px;
-}
-
 #title {
 	background-color: #FFAA00;
-	width: 100%;
+	width: 80%;
 	height: 100px;
 	padding-top: 40px;
 	text-align: center;
@@ -25,21 +15,16 @@ p {
 	color: #ffffff;
 	font-size: 400%;
 	font-style: italic;
-	margin-left: 0px;
+	margin-left: 10%;
 	line-height: 60px;
 }
 
-#preface {
+#pdf {
 	margin-left: 10%;
-	padding-bottom: 0px;
-	height: 800px;
-	width: 80%;
-	background-color: #f4f9ff;
+	margin-top: 0;
+	padding: 0;
 }
 
 #HCB_comment_box {
-	margin-top: 20px;
 	margin-left: 20px;
 }
-
-

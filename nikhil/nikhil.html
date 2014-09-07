@@ -31,7 +31,10 @@
 	  </div>
   
 	<script type="text/javascript">
-		var linkImages= ["eras/eras.png","eras/eras.png"]
+		var projectNames= ["eras","neighbors"];
+		var spotlightTitles= ["Eras of the NBA","Playoff Success Orbit"];
+		var spotlightSubtitles= ["A timeline of franchise-defining players for each team.", "Gauging playoff potential based on success of similar teams"];
+		var currentSpotlight= -1;
 		var projMargin= 40;
 		var projTopPad= 50;
 		var projLeftPad= 30;
@@ -51,7 +54,7 @@
 						.attr("id","projects")
 						.attr("x","50%")
 						.attr("y",0)
-						.attr("height", 250*Math.floor((linkImages.length+1)/2) + 2*projMargin)
+						.attr("height", 250*Math.floor((projectNames.length+1)/2) + 2*projMargin)
 						
 		
 		<!--------------------------------------------- SPOTILIGHT NAV BUTTONS --------------------------------------------->
@@ -64,7 +67,14 @@
 				  .attr("fill","white")
 				  .attr("text-anchor","middle")
 				  .attr("dominant-baseline","central")
-				  .text(function(d) { return '\uf137' });
+				  .text(function(d) { return '\uf137' })
+				  .on("click",function() {
+					  //This version of the mod function is always nonnegative
+					  currentSpotlight= ((currentSpotlight-1)%projectNames.length + projectNames.length)%projectNames.length;
+					  console.log(currentSpotlight);
+					  changeSpotlight(currentSpotlight);
+					  
+					});
 		
 		spotlight.append('text')
 				  .attr("id","goRight")
@@ -76,7 +86,12 @@
 				  .attr("fill","white")
 				  .attr("text-anchor","middle")
 				  .attr("dominant-baseline","central")
-				  .text(function(d) { return '\uf138' });
+				  .text(function(d) { return '\uf138' })
+				  .on("click",function() {
+					  currentSpotlight= (currentSpotlight+1)%projectNames.length;
+					  changeSpotlight(currentSpotlight);
+					  
+					});
 				  
 		spotlight.append('text')
 				  .on("click", function() {hideSpotlight()})
@@ -98,7 +113,6 @@
 				  .attr("x", 40)
 				  .attr("y","9%")
 				  .attr("dominant-baseline","hanging")
-				  .text("Eras of the NBA")
 				  
 		spotlight.append("text")
 				  .attr("id","spotlightSubtitle")
@@ -106,11 +120,9 @@
 				  .attr("y","9%")
 				  .attr("dy",40)
 				  .attr("dominant-baseline","hanging")
-				  .text("A timeline of franchise-defining players for each team.")
 				  
 		spotlight.append("image")
 				  .attr("id","spotlightImage")
-				  .attr("xlink:href","eras/erasLarge.png")
 				  .attr("x", 40)
 				  .attr("y", "30%")
 				  .attr("width",1111/2.2)
@@ -124,10 +136,6 @@
 		
 		spotlightButtonData= spotlight.append("g")
 									  .attr("id","spotlightButtonData")
-									  .on("click",function() {
-										  location.href='eras/eras.html';
-										  target="_blank";
-										})
 		
 		spotlightButtonData.append("rect")
 							.attr("x", "60%")
@@ -166,10 +174,6 @@
 		
 		spotlightButtonPreface= spotlight.append("g")
 									  .attr("id","spotlightButtonPreface")
-									  .on("click",function() {
-										  location.href='eras/erasPreface.html';
-										  target="_blank";
-										})
 		
 		spotlightButtonPreface.append("rect")
 							  .attr("x", "60%")
@@ -196,10 +200,6 @@
 		
 		spotlightButtonMath= spotlight.append("g")
 									  .attr("id","spotlightButtonMath")
-									  .on("click",function() {
-										  location.href='eras/erasPreface.html';
-										  target="_blank";
-										})
 		
 		spotlightButtonMath.append("rect")
 							  .attr("x", "80%")
@@ -225,42 +225,99 @@
 		<!-------------------------------------------- SHOW/HIDE SPOTLIGHT CONTENT ------------------------------------------>
 		function showSpotlight() {
 			spotlightVisible= true;
-			projects.selectAll("image").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))+spotlightHeight; })
+			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))+spotlightHeight; })
 			spotlight.transition().delay(0).duration(500).attr("height",spotlightHeight)
+		}
+		
+		function changeSpotlight(index) {
+			projName= projectNames[index];
+		
+			//Set spotlight content
+			spotlight.select("#spotlightTitle").text(spotlightTitles[index])
+			spotlight.select("#spotlightSubtitle").text(spotlightSubtitles[index])
+			spotlight.select("#spotlightImage").attr("xlink:href", function() {
+																	  return projName+'/'+projName+"Large.png";
+																	})
+			
+			//Set links for data/preface/math
+			spotlight.select("#spotlightButtonData").on("click",function() {
+										  location.href= projName+'/'+projName+'.html';
+										  target="_blank";
+										})
+			spotlight.select("#spotlightButtonPreface").on("click",function() {
+										  location.href= projName+'/'+projName+'Preface.html';
+										  target="_blank";
+										})
+			spotlight.select("#spotlightButtonMath").on("click",function() {
+										  location.href= projName+'/'+projName+'Math.html';
+										  target="_blank";
+										})
 		}
 		
 		function hideSpotlight() {
 			spotlightVisible= false;
-			projects.selectAll("image").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))-spotlightHeight; })
+			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))-spotlightHeight; })
 			spotlight.transition().delay(0).duration(500).attr("height",0)
 		}
 		
 		
 		<!----------------------------------------------- ADD LINKS TO PROJECTS --------------------------------------------->
 	  
-		projectLinks= projects.selectAll("image")
-							  .data(linkImages)
+		projectGroups= projects.selectAll("g")
+							  .data(projectNames)
 							  .enter()
-							  .append("image")
-							  .attr("width", 410)
-							  .attr("height", 200)
-							  .attr("xlink:href","eras/eras.png")
-							  .on("click", function(){
-								  if(!spotlightVisible) {
-									  showSpotlight();
-								  }
-								})
-							  .attr("x",function(d,i) {
-								  return 68 + (i%2)*478;
-								})
-							  .attr("y",function(d,i) {
-								  return 40 + Math.floor(i/2)*248;
-								})
+							  .append("g")
+							  .on("click", function(d,i){
+								if(!spotlightVisible)
+								  showSpotlight();
+								if(currentSpotlight != i) {
+									currentSpotlight= i;
+									changeSpotlight(i);
+								}
+							  })
 		
-		
+		projectGroups.append("image")
+					  .attr("id","projGroup")
+					  .attr("width", 400)
+					  .attr("height", 250)
+					  .attr("xlink:href", function(d) {
+						  return d+'/'+d+'.png'
+						})
+					  .attr("x",function(d,i) {
+						  return 68 + (i%2)*478;
+						})
+					  .attr("y",function(d,i) {
+						  return 80 + Math.floor(i/2)*248;
+						})
+					  
+		projectGroups.append("rect")
+					  .attr("id","projGroup")
+					  .attr("width",400)
+					  .attr("height",50)
+					  .attr("x",function(d,i) {
+						  return 68 + (i%2)*478;
+						})
+					  .attr("y",function(d,i) {
+						  return 80 + Math.floor(i/2)*248 + 200;
+						})
+					  .attr("fill","black")
+					  .attr("opacity",0.4)
+					  
+		projectGroups.append("text")
+					  .attr("id","projGroup")
+					  .attr("x",function(d,i) {
+						  return 68 + (i%2)*478 + 200;
+						})
+					  .attr("y",function(d,i) {
+						  return 80 + Math.floor(i/2)*248 + 225;
+						})
+					  .attr("text-anchor","middle")
+					  .attr("dominant-baseline","central")
+					  .attr("fill","white")
+					  .text(function(d,i) {
+						return spotlightTitles[i];
+					  })
 					
-					
-		
 						
 	</script>
 	
