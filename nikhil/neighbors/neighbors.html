@@ -44,6 +44,9 @@
 			var orbitCenterY= 5+zoomRad+distScale+offset+mainR;
 			var minNeighRad= w/120;
 			var winRadScale= w/120;
+			
+			//Help button sizings
+			var helpRad= 40;
 			var onHelp= true;
 			
 			//Create SVG element
@@ -54,7 +57,7 @@
 						
 						
 						
-			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TITLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TITLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			
 			svg.append("text")
 				.attr("class","title")
@@ -65,7 +68,7 @@
 				.attr("class","subtitle")
 				.text("Gauging playoff potential based on success of similar teams")
 				.attr("x",15)
-				.attr("y",80)
+				.attr("y",80)*/
 			
 			
 			
@@ -114,7 +117,7 @@
 			help= svg.append("image")
 					.attr("xlink:href", "neighborsHelp.png")
 					.attr("x", 380)
-					.attr("y", 150)
+					.attr("y", 65)
 					.attr("width",1767/3)
 					.attr("height",2505/3)
 					.attr("display","inline")
@@ -148,41 +151,39 @@
 				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~HELP BUTTON~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 								
 				helpButton= svg.append("g")
-								.attr("class","helpButton")
+						.attr("class","helpButton")
+						.on("click", function() {
+							toggleClicked[toggleClicked.length-1]= 1;
+							unSelectToggles(toggleClicked.length-1);
+							showHelp()
+						})
+						.on("mouseover",function() {
+								svg.select("g.helpButton").select("circle")
+														.attr("stroke-width",5)
+														.attr("stroke",d3.rgb("#d8bfd8").darker(1));
+						})
+						.on("mouseout",function() {
+								svg.select("g.helpButton").select("circle")
+														.attr("stroke-width",5)
+														.attr("stroke",d3.rgb("#d8bfd8"));
+						});
 				
 				helpButton.append("circle")
-						.attr("class", "helpButton")
-						.attr("cx","97%")
-						.attr("cy","6%")
-						.attr("r",toggleButtonDiam/2)
-						.attr("fill", colors["HELP"])
-						
-				helpButton.on("mouseover",function() { //Add event handler to each GROUP (not each individual circle/text!)
-								color= d3.select(this).select("circle").attr("fill");
-								d3.select(this).select("circle").attr("stroke",d3.rgb(color).darker(1));
-								d3.select(this).select("circle").attr("stroke-width",5);
-							})
-					.on("mouseout",function() {
-									for(i=0; i<17; i++) {
-										if(toggleClicked[i]==0) {
-											d3.select(this).select("circle").attr("stroke-width","0");
-										}
-									}
-								})
-					.on("click", function(d,i) {
-									toggleClicked[toggleClicked.length-1]= 1;
-									unSelectToggles(toggleClicked.length-1);
-									showHelp();
-								});
-				helpButton.append("text") //Add text to each group
-					.attr("class","helpButton")
-					.attr("x","97%")
-					.attr("y", "6%")
-					.attr("font-size",toggleButtonDiam/4)
+					.attr("cx","90%")
+					.attr("cy","6%")
+					.attr("r", helpRad)
+					.attr("fill","#d8bfd8") //BC8F8F,FA8072
+					
+					
+				helpButton.append("text")
+					.attr("x","90%")
+					.attr("y","6%")
+					.attr("font-size",helpRad)
 					.attr("font-family","sans-serif")
+					.attr("fill","white")
+					.attr("text-anchor","middle")
 					.attr("dominant-baseline","central")
-					.attr("fill", "white")
-					.text("HELP");
+					.text("?")
 				
 				
 				
@@ -192,7 +193,7 @@
 				toggle= svg.append("svg")
 							.attr("class","toggle")
 							.attr("x",0)
-							.attr("y",115)
+							.attr("y",30)
 							.attr("width", toggleGroupWidth)
 							.attr("height", h);
 				
