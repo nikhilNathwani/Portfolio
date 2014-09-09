@@ -53,6 +53,7 @@ function setOrbit(dat) {
 	
 	var name= dat.team;
     var neighbors= dat.neighbors;
+	var numWins= {"ATL":0,"CHA":0,"BRK":1,"CHI":0,"WAS":1,"TOR":0,"MIA":3,"IND":2,"DAL":0,"MEM":0,"GSW":0,"POR":1,"HOU":0,"LAC":1,"OKC":2,"SAS":4}
 	
     x= getDistBounds(neighbors);
     max= x[0];
@@ -86,7 +87,8 @@ function setOrbit(dat) {
 										return;
 									});
 				}
-                return labels[i]+d;    
+				suffix= i==0 ? d : numWins[name];
+                return labels[i]+suffix;    
             })
 	
     //set properties and event handlers of each circle in orbit

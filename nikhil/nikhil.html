@@ -297,80 +297,18 @@
 		
 		projectGroups.append("image")
 					  .attr("id","projGroup")
-					  .attr("width", 400)
+					  .attr("width", "40%")
 					  .attr("height", 250)
 					  .attr("xlink:href", function(d) {
 						  return d+'/'+d+'.png'
 						})
 					  .attr("x",function(d,i) {
-						  return 68 + (i%2)*478;
+						  return (20/3 + (i%2)*(40+20/3))+"%";
 						})
 					  .attr("y",function(d,i) {
 						  return 80 + Math.floor(i/2)*248;
 						})
-					  
-		projectGroups.append("rect")
-					  .attr("id","projGroup")
-					  .attr("width",400)
-					  .attr("height",50)
-					  .attr("x",function(d,i) {
-						  return 68 + (i%2)*478;
-						})
-					  .attr("y",function(d,i) {
-						  return 80 + Math.floor(i/2)*248 + 200;
-						})
-					  .attr("fill","black")
-					  .attr("opacity",0.4)
-					  
-		projectGroups.append("text")
-					  .attr("id","projGroup")
-					  .attr("x",function(d,i) {
-						  return 68 + (i%2)*478 + 200;
-						})
-					  .attr("y",function(d,i) {
-						  return 80 + Math.floor(i/2)*248 + 225;
-						})
-					  .attr("text-anchor","middle")
-					  .attr("dominant-baseline","central")
-					  .attr("fill","white")
-					  .text(function(d,i) {
-						return spotlightTitles[i];
-					  })
-		
-		//Coming soon rect
-		projectGroups.append("rect")
-					  .attr("id","projGroup")
-					  .attr("width",function(d,i) {
-						  return i==0 ? 0 : 400; 
-						})
-					  .attr("height",function(d,i) {
-						  return i==0 ? 0 : 50;
-						})
-					  .attr("x",function(d,i) {
-						  return 68 + (i%2)*478;
-						})
-					  .attr("y",function(d,i) {
-						  return 80 + Math.floor(i/2)*248 + 75;
-						})
-					  .attr("fill","black")
-					  .attr("opacity",0.4)
-					  
-		projectGroups.append("text")
-					  .attr("id","projGroup")
-					  .attr("x",function(d,i) {
-						  return 68 + (i%2)*478 + 200;
-						})
-					  .attr("y",function(d,i) {
-						  return 80 + Math.floor(i/2)*248 + 100;
-						})
-					  .attr("text-anchor","middle")
-					  .attr("dominant-baseline","central")
-					  .attr("fill","white")
-					  .text(function(d,i) {
-						return i==0 ? "" : "Coming Sep 14...";
-					  })
 					
-						
 	</script>
 	
   </body>
