@@ -4,16 +4,27 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{graphicx}
+\usepackage{fullpage}
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{tikz}
 \usepackage[ruled]{algorithm2e}
+\usepackage{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
 \usetikzlibrary{arrows}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem*{remark}{Remark}
 \newtheorem{proposition}[theorem]{Proposition}
-\begin{document}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+       % define the title
+       \author{Nikhil J. Nathwani}
+       \title{Eras of the NBA}
+       \begin{document}
+       % generates the title
+       \maketitle
 
 \section{Goal}
 The goal is to delineate the distinct eras of each NBA franchise. Taking a player-centric approach, this is equivalent to determining which players define the history of each franchise. I've chosen to quantify a player's worth based on his win share\footnote{A measure that tries to quantify how many regular-season wins an individual accounted for. Complete explanation \href{http://www.basketball-reference.com/about/ws.html}{here}.} percentage\footnote{Simply calculated by dividing an individual's win shares by the sum of the win shares of all members of his team.} (WS\%), because a player with a large percentage of his team's win shares in a given season is likely to be crucial to that era of the franchise. Other metrics could be used to gain different perspectives on a team's history.
@@ -37,44 +48,73 @@ $w_j(p) = \left\{ \begin{array}{ll}
 As a preprocessing step, I use the following algorithm to exclude a number of players that clearly did not have a high enough impact:\\
 
 	\begin{algorithm} [H]
-	\caption{Preprocess($T$)}
+	\caption{\texttt{Preprocess}($T$)}
 	\For{each season $j$} {
-		Sort $P_j$ in descending order of WS\%\;
-	$V^\prime := V^\prime \cup \{v^\prime\}$\;
-       	\For{each $u \in V$ such that $(u,v) \in E$ (undirected)} {
-	$E^\prime := E^\prime \cup (u,v^\prime)$\;
+		$P^* := \emptyset$\;
+		$totalWS := 0$\;
+       	\While{$totalWS < T$} {
+		$p := \arg \! \max \limits_{p \in P_j} \{w_j(p)\}$\;
+		$totalWS \leftarrow totalWS + w_j(p)$\;
+		$P_j \leftarrow P_j \setminus \{p\}$\;
+		$P^* \leftarrow P^* \cup \{p\}$\;
 	}
+	$P_j \leftarrow P^*$\;
 	}
-	return ($G^\prime,k+1$)\;
 	\end{algorithm}
 
 
-To make the problem more tractable and interesting, I impose the following constraints:
+\textcolor{white}{spacing}
 
-\begin{enumerate}
-\item $\forall_j \; P_j \ne \emptyset$ \footnote{I do this because it means JaVale McGee could possibly show up on the Wizard's list of franchise-definers. Unsuccessful eras of franchises need to be remembered, and I never want to forget JaVale's stint in Washington.}.
-\item $\forall_j  \; \sum_{p \in P} w_j(p) \ge t$, where $t$ is a tweakable parameter
-\end{enumerate}
+In words, this retains the win share leaders of team $X$ each season, but only keeps as many as are needed to cover $T\%$ of the total win shares.
 
-Taking that one step further: to ascertain that every season is well-represented, I'll select FDs in a way that ensures $t\%$ of the total win shares are accounted for each season, where $t$ is a tweakable parameter. 
+To make the problem more tractable and interesting, I impose the following constraint:
+
+\begin{equation}
+\forall_j  \; \sum_{p \in P} w_j(p) \ge t
+\end{equation}
+
+\noindent where $t$ is a tweakable parameter. Ensuring that $t\%$ of the total win shares are accounted for each season allows every season to be well-represented in team $X$'s history.
+
+What we're now left with is a \href{http://en.wikipedia.org/wiki/Covering_problems}{covering problem}: we want to satisfy the constraints specifed by inequality (1) while minimizing the total number of players used. Since were dealing with decision variables (i.e. 0,1-valued variables that specify whether or not a player is used), we can formulate this problem as an \href{http://en.wikipedia.org/wiki/Integer_programming}{integer program} (IP). But before diving into the IP formulation, I want to define the decision variables in a way that is more sensible for this real-world scenario:
+
+If we select player $p$ in season $j$, and player $p$ is also available to be selected in season $j+1$, then it is befitting to select player $p$ in season $j+1$. This is because we know player $p$ was valuable to the team in both of those years (because of the \texttt{Preprocess} algorithm), and being valuable for multiple consecutive seasons certainly warrants inclusion in team $X$'s historical record.
+
+So, let's define a \emph{reign} to be a maximal-length sequence of consecutive seasons in which a specific player is in the preprocessed seasonal player sets. E.g. if player $p$ is in $P_0,P_1,P_2,P_4,$ and $P_5$, then $\{0,1,2\}$ and $\{4,5\}$ are reigns. Now instead of selecting players, we'll select reigns, thereby selecting the player corresponding to that reign for each season of that reign's duration. 
 
 
 
 \section{IP-Formulation}
+I'll index the reigns numerically\footnote{In the implementation there is a mapping from reigns to the players they correspond to, but this is irrelevant when discussing the mathematical reasoning.} so that our decision variables are: 
 
-$r_{ij} = \left\{ \begin{array}{ll}
+\begin{center}
+$r_{i} = \left\{ \begin{array}{ll}
 		            1 & \quad \text{reign } i \text{ is selected}\\
 		            0 & \quad \text{otherwise}
 		        \end{array}
  		   \right. $
-\\
-\\
-$w_{ij} = \left\{ \begin{array}{ll}
-		            \text{WS\% of player in reign } i \text{ during season } j & \quad j \in R_i\\
+\end{center}
+
+
+Let $W$ be a matrix with entries defined as follows:
+
+\begin{center}
+$W_{ij} = \left\{ \begin{array}{ll}
+		            \text{WS\% of player $p$ corresp. to reign } i \text{ during season } j & \quad p \in P_j\\
 		            0 & \quad \text{otherwise}
 		        \end{array}
  		   \right. $
+\end{center}
 
+Our problem has been reduced to the following binary integer program, where $\vec{r}$ is the vector of decision variables $r_i$ and $\vec{t}$ a column vector (with length equal to the number of seasons) where each entry is $t$ from inequality (1): 
 
+\begin{center}
+    min. $\norm{\vec{r}}_1$\\
+
+    \, \, \, s.t. $W\vec{r} \ge \vec{t}$
+    
+   \, \, \, $ r_i \in \{0,1\}$ \! $\forall_i$
+\end{center}
+
+This IP can be solved using branch-and-cut methods, for which there is a handy library called \href{http://www.gnu.org/software/glpk/}{GLPK}. The solution to this IP is a binary vector denoting which reigns have been selected. Mapping the selected reigns back to the players the correspond to gives us our desired set of players to represent team $X$'s history.
 
 \end{document}

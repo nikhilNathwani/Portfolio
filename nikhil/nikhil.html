@@ -55,6 +55,25 @@
 						.attr("x","50%")
 						.attr("y",0)
 						.attr("height", 250*Math.floor((projectNames.length+1)/2) + 2*projMargin)
+		
+		var credits= d3.select("body")
+						.append("svg")
+						.attr("id","credits")
+						.attr("x","50%")
+						.attr("y", 250*Math.floor((projectNames.length+1)/2) + 2*projMargin)
+						.attr("height",60)
+						
+		
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CREDITS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+			
+		credits.append("text")
+					.attr("class","credits")
+					.text("Copyright 2014 Nikhil Nathwani")
+					.attr("x","50%")
+					.attr("y","100%")
+					.attr("dy",-25)
+					.attr("fill","white")
+					.style("text-anchor","middle")
 						
 		
 		<!--------------------------------------------- SPOTILIGHT NAV BUTTONS --------------------------------------------->

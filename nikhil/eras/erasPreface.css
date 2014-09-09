@@ -5,10 +5,11 @@ html, body {
 	padding: 0px;
 }
 
-h1, p {
+h1, p, li {
 	color: #7a8999;
 	margin-left: 20px;
 	width: 95%;
+	line-height: 22px;
 }
 
 p {
@@ -32,9 +33,13 @@ p {
 #preface {
 	margin-left: 10%;
 	padding-bottom: 0px;
-	height: 800px;
+	height: 1020px;
 	width: 80%;
 	background-color: #f4f9ff;
+}
+
+#learned {
+	padding-top: 15px; 
 }
 
 #HCB_comment_box {
