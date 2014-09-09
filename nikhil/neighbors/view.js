@@ -15,17 +15,15 @@ function hideOrbit() {
 			.attr("r",0);
     sunGroup.selectAll("text")
             .attr("font-size",0);
+			
+	//Hide axes
+	axes.attr("display","none")
 }
 
 function hideHelp(){
     //hide help text on axes
-    help.selectAll("text.helpPath")
-        .attr("font-size", 0)
-    
-    //hide help sun
-    help.select("circle.sun")
-        .attr("fill","none")
-    
+    help.attr("display","none")
+		    
 	//unhide sun
 	sunGroup= svg.select("g.sun")
 	sunGroup.select("circle")
@@ -39,13 +37,8 @@ function showHelp() {
     }
     onHelp= true;
     
-    //show help sun
-    help.select("circle.sun")
-        .attr("fill",colors["HELP"])
-        
-    //show help text on axes
-    help.selectAll("text.helpPath")
-        .attr("font-size", distScale/8);    
+    //show help image
+    help.attr("display","inline")
 }
 
 function setOrbit(dat) {
@@ -55,6 +48,9 @@ function setOrbit(dat) {
     }
     onHelp= false;
 
+	//Show axes
+	axes.attr("display","inline")
+	
 	var name= dat.team;
     var neighbors= dat.neighbors;
 	

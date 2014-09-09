@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>D3 Test</title>
+        <title>NBA Playoff Sucess Orbit</title>
         <script type="text/javascript" src="../d3/d3.js"></script>
 		<script type="text/javascript" src="util.js"></script>
 		<script type="text/javascript" src="view.js"></script>
@@ -29,7 +29,7 @@
 			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#F26532", "CHH":"#25799A", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NJN":"#002258", "NOH":"#0095CA", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAS":"#BEC8C9", "SAC":"#743389", "SEA":"#19542D", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874","HELP":"#d8d8f0"}
             //Width and height
             var w= 1250;
-            var h= 900;
+            var h= 1111;
             var mainR= w/12; //radius of main circle
             var distScale= 150
 			var zoomRad= w/8;
@@ -94,7 +94,6 @@
 				.style("text-anchor","middle")
 			
 			
-			
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~AXES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 						
 			//create group for concentric axes
@@ -107,59 +106,23 @@
 					.attr("cy",orbitCenterY)
 			}
 			formatAxes();
-			
-			
+			hideOrbit();
 			
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~HELP SCREEN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 			
 			//group for help items
-			help= svg.append("g")
-					.attr("class","help")
-					
-			//paths for help text
-			help.append("path")
-				.attr("id","veryVerySimilar")
-				.attr("stroke","none")
-				.attr("fill","none")
-				.attr("d", "M " + (orbitCenterX-offset-mainR) + " " + orbitCenterY + " " + "A " + mainR + " " + mainR + " 0 1 1 " + (orbitCenterX + offset + mainR) + " " + orbitCenterY)
-			help.append("path")
-				.attr("id","verySimilar")
-				.attr("stroke","none")
-				.attr("fill","none")
-				.attr("d", "M " + (orbitCenterX-offset-mainR) + " " + orbitCenterY + " " + "A " + mainR + " " + mainR + " 0 1 1 " + (orbitCenterX + offset + mainR) + " " + orbitCenterY)
-			help.append("text")
-				.attr("fill","#999999")
-				.attr("class","helpPath")
-				.attr("font-size",distScale/8)
-				.attr("dy",offset-distScale/4)
-				.append("textPath")
-				.attr("xlink:href","#veryVerySimilar")
-				.attr("startOffset","50%")
-				.text("VERY VERY SIMILAR TEAMS")
-			help.append("text")
-				.attr("class","helpPath")
-				.attr("fill","#999999")
-				.attr("font-size",distScale/8)
-				.attr("dy",offset-3*distScale/4)
-				.append("textPath")
-				.attr("xlink:href","#verySimilar")
-				.attr("startOffset","50%")
-				.text("VERY SIMILAR TEAMS")
-				
-			//sun for help text
-			help.append("circle")
-				.attr("class","sun")
-				.attr("cx",orbitCenterX)
-				.attr("cy",orbitCenterY)
-				.attr("r",mainR)
-				.attr("fill",colors["HELP"])
+			help= svg.append("image")
+					.attr("xlink:href", "neighborsHelp.png")
+					.attr("x", 380)
+					.attr("y", 150)
+					.attr("width",1767/3)
+					.attr("height",2505/3)
+					.attr("display","inline")
 			
-		
+			
 			//load and display neighbor data
 			d3.json("neighbors.json", function(teamAndNeighs) {		
-				
-				
-				
+			
 				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CENTRAL SUN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 				
 				//Create main circle
