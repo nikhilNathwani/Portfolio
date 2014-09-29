@@ -27,7 +27,7 @@
        \maketitle
 
 \section{Goal}
-The goal is to delineate the distinct eras of each NBA franchise. Taking a player-centric approach, this is equivalent to determining which players define the history of each franchise. I've chosen to quantify a player's worth based on his win share\footnote{A measure that tries to quantify how many regular-season wins an individual accounted for. Complete explanation \href{http://www.basketball-reference.com/about/ws.html}{here}.} percentage\footnote{Simply calculated by dividing an individual's win shares by the sum of the win shares of all members of his team.} (WS\%), because a player with a large percentage of his team's win shares in a given season is likely to be crucial to that era of the franchise. Other metrics could be used to gain different perspectives on a team's history.
+The goal is to delineate the distinct eras of each NBA franchise. Taking a player-centric approach, this is equivalent to determining which players define the history of each franchise. I've chosen to quantify a player's worth based on his win share\footnote{A measure that tries to quantify how many regular-season wins an individual accounted for. Complete explanation \textcolor{blue}{\underline{\href{http://www.basketball-reference.com/about/ws.html}{here}}}.} percentage\footnote{Simply calculated by dividing an individual's win shares by the sum of the win shares of all members of his team.} (WS\%), because a player with a large percentage of his team's win shares in a given season is likely to be crucial to that era of the franchise. Other metrics could be used to gain different perspectives on a team's history.
 
 The method used to select these ``franchise-definers'' should keep the number of chosen players to a minimum, in order to weed out those who were not true flagships of any particular era. But of course, the obvious superstar players should not be excluded either.
 
@@ -73,9 +73,9 @@ To make the problem more tractable and interesting, I impose the following const
 \forall_j  \; \sum_{p \in P} w_j(p) \ge t
 \end{equation}
 
-\noindent where $t$ is a tweakable parameter. Ensuring that $t\%$ of the total win shares are accounted for each season allows every season to be well-represented in team $X$'s history.
+\noindent where $t$ is a tweakable parameter\footnote{See the ``Table of Parameters'' in the ``Appendix'' section for a table showing the parameters $T$ (from \texttt{Preprocess}) and $t$ chosen for each team.}. Ensuring that $t\%$ of the total win shares are accounted for each season allows every season to be well-represented in team $X$'s history.
 
-What we're now left with is a \href{http://en.wikipedia.org/wiki/Covering_problems}{covering problem}: we want to satisfy the constraints specifed by inequality (1) while minimizing the total number of players used. Since were dealing with decision variables (i.e. 0,1-valued variables that specify whether or not a player is used), we can formulate this problem as an \href{http://en.wikipedia.org/wiki/Integer_programming}{integer program} (IP). But before diving into the IP formulation, I want to define the decision variables in a way that is more sensible for this real-world scenario:
+What we're now left with is a \textcolor{blue}{\underline{\href{http://en.wikipedia.org/wiki/Covering_problems}{covering problem}}}: we want to satisfy the constraints specifed by inequality (1) while minimizing the total number of players used. Since were dealing with decision variables (i.e. 0,1-valued variables that specify whether or not a player is used), we can formulate this problem as an \textcolor{blue}{\underline{\href{http://en.wikipedia.org/wiki/Integer_programming}{integer program}}} (IP). But before diving into the IP formulation, I want to define the decision variables in a way that is more sensible for this real-world scenario:
 
 If we select player $p$ in season $j$, and player $p$ is also available to be selected in season $j+1$, then it is befitting to select player $p$ in season $j+1$. This is because we know player $p$ was valuable to the team in both of those years (because of the \texttt{Preprocess} algorithm), and being valuable for multiple consecutive seasons certainly warrants inclusion in team $X$'s historical record.
 
@@ -115,6 +115,53 @@ Our problem has been reduced to the following binary integer program, where $\ve
    \, \, \, $ r_i \in \{0,1\}$ \! $\forall_i$
 \end{center}
 
-This IP can be solved using branch-and-cut methods, for which there is a handy library called \href{http://www.gnu.org/software/glpk/}{GLPK}. The solution to this IP is a binary vector denoting which reigns have been selected. Mapping the selected reigns back to the players the correspond to gives us our desired set of players to represent team $X$'s history.
+This IP can be solved using branch-and-cut methods, for which there is a handy library called \textcolor{blue}{\underline{\href{http://www.gnu.org/software/glpk/}{GLPK}}}. The solution to this IP is a binary vector denoting which reigns have been selected. Mapping the selected reigns back to the players the correspond to gives us our desired set of players to represent team $X$'s history.
 
+\section{Appendix}
+\subsection{Table of Parameters}
+\begin{table}[ht]
+  \begin{minipage}[b]{0.6\linewidth}\centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Team & $T$ & $t$ \\ \hline
+    ATL  & 0.6   & 0.4   \\ \hline
+    BOS  & 0.7   & 0.4   \\ \hline
+    BRK  & 0.55  & 0.4   \\ \hline
+    CHA  & 0.7   & 0.4   \\ \hline
+    CHI  & 0.7   & 0.4   \\ \hline
+    CLE  & 0.6   & 0.4   \\ \hline
+    DAL  & 0.8   & 0.4   \\ \hline
+    DEN  & 0.65  & 0.4   \\ \hline
+    DET  & 0.6   & 0.4   \\ \hline
+    GSW  & 0.6   & 0.4   \\ \hline
+    HOU  & 0.7   & 0.4   \\ \hline
+    IND  & 0.7   & 0.4   \\ \hline
+    LAC  & 0.75  & 0.4   \\ \hline
+    LAL  & 0.8   & 0.4   \\ \hline
+    MEM  & 0.8   & 0.4   \\ \hline
+    \end{tabular}
+  \end{minipage}
+  \hspace{-.2\linewidth}
+  \begin{minipage}[b]{0.6\linewidth}\centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Team & $T$ & $t$ \\ \hline
+    MIA  & 0.65  & 0.4   \\ \hline
+    MIL  & 0.6   & 0.4   \\ \hline
+    MIN  & 0.8   & 0.4   \\ \hline
+    NOP  & 0.8   & 0.4   \\ \hline
+    NYK  & 0.55  & 0.4   \\ \hline
+    OKC  & 0.7   & 0.4   \\ \hline
+    ORL  & 0.6   & 0.4   \\ \hline
+    PHI  & 0.7   & 0.4   \\ \hline
+    PHO  & 0.6   & 0.4   \\ \hline
+    POR  & 0.6   & 0.4   \\ \hline
+    SAC  & 0.7   & 0.4   \\ \hline
+    SAS  & 0.6   & 0.4   \\ \hline
+    TOR  & 0.7   & 0.4   \\ \hline
+    UTA  & 0.6   & 0.4   \\ \hline
+    WAS  & 0.55  & 0.4   \\ \hline
+    \end{tabular}
+  \end{minipage}
+\end{table}
 \end{document}

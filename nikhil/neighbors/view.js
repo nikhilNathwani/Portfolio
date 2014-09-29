@@ -53,6 +53,7 @@ function setOrbit(dat) {
 	
 	var name= dat.team;
     var neighbors= dat.neighbors;
+	var predWins= dat.predictedWins;
 	var numWins= {"ATL":0,"CHA":0,"BRK":1,"CHI":0,"WAS":1,"TOR":0,"MIA":3,"IND":2,"DAL":0,"MEM":0,"GSW":0,"POR":1,"HOU":0,"LAC":1,"OKC":2,"SAS":4}
 	
     x= getDistBounds(neighbors);
@@ -62,9 +63,9 @@ function setOrbit(dat) {
 	//set sun format and text
     sun.select("circle")
         .attr("fill", colors[name]);
-    labels= ["","Playoff series won: "];//, "Predicted series wins: ", "Weighted win score: ", "Conference rank: ", "League rank: "];
-    sunTextSizes= [mainR/4,mainR/6];//,mainR/7,mainR/7,mainR/7,mainR/7];
-    sunData= [name+" \'13-\'14",3];//,2,2.12,6,9];
+    labels= ["", "Predicted series wins: ","Actual series won: "];//, "Weighted win score: ", "Conference rank: ", "League rank: "];
+    sunTextSizes= [mainR/4,mainR/6,mainR/6];//,mainR/7,mainR/7,mainR/7,mainR/7];
+    sunData= [name+" \'13-\'14",predWins,numWins[name]];//,2,2.12,6,9];
 	sun.selectAll("text")
         .data(sunData)
         .attr("x",orbitCenterX)
@@ -73,22 +74,22 @@ function setOrbit(dat) {
 				for(k=0;k<=i;k++) {
 					s += sunTextSizes[k];
 				}
-                return orbitCenterY - mainR + s + 8*mainR/12 + i*mainR/6;//orbitCenterY - mainR + s + 5*mainR/12 + (i-1)*mainR/12
+                return orbitCenterY - mainR + s + mainR/2 + i*mainR/7;//orbitCenterY - mainR + s + 5*mainR/12 + (i-1)*mainR/12
             })                              
         .attr("font-size",function(d,i){
                 return sunTextSizes[i];
             })
         .text(function(d,i) {
                 if(i==0) {
-					d3.select(this.parentNode).attr("xlink:href", "http://www.basketball-reference.com"+"/teams/"+name+"/2014.html");
+					d3.select(this.parentNode).attr("xlink:href", "http://www.basketball-reference.com"+"/teams/"+name+"/2014.html")
+											.attr("target","_blank");
 					d3.select(this).style("text-decoration","underline")
                                     .attr("fill","white")
 									.on("click", function() {
 										return;
 									});
 				}
-				suffix= i==0 ? d : numWins[name];
-                return labels[i]+suffix;    
+                return labels[i]+sunData[i];    
             })
 	
     //set properties and event handlers of each circle in orbit

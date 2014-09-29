@@ -13,7 +13,7 @@
 	  <div id="header1">
 		  Hi, I'm Nikhil
 		  <audio id="mp3" src="pronounce.mp3"></audio>
-		  <a id="pronounce" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
+		  <a id="pronounce" style="cursor:pointer" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
 	  </div>
 	  <div id="subtitle">
 		  <div id= "inlines">
@@ -68,16 +68,17 @@
 			
 		credits.append("text")
 					.attr("class","credits")
-					.text("Copyright 2014 Nikhil Nathwani")
+					.text("Copyright 2014 Nikhil Nathwani | Contact: nikhilhyphen@gmail.com")
 					.attr("x","50%")
 					.attr("y","100%")
 					.attr("dy",-25)
-					.attr("fill","white")
+					.attr("fill","#888888")
 					.style("text-anchor","middle")
 						
 		
 		<!--------------------------------------------- SPOTILIGHT NAV BUTTONS --------------------------------------------->
 		spotlight.append('text')
+				  .style("cursor","pointer")
 				  .attr("id","goLeft")
 				  .attr('font-family', 'FontAwesome')
 				  .attr('font-size', 20)
@@ -97,6 +98,7 @@
 		
 		spotlight.append('text')
 				  .attr("id","goRight")
+				  .style("cursor","pointer")
 				  .attr('font-family', 'FontAwesome')
 				  .attr('font-size', 20)
 				  .attr("x","90%")
@@ -115,6 +117,7 @@
 		spotlight.append('text')
 				  .on("click", function() {hideSpotlight()})
 				  .attr("id","hideSpotlight")
+				  .style("cursor","pointer")
 				  .attr('font-family', 'FontAwesome')
 				  .attr('font-size', 20)
 				  .attr("x","90%")
@@ -154,6 +157,7 @@
 		/* ENTER THE DATA VISUALIZATION */
 		
 		spotlightButtonData= spotlight.append("g")
+									  .style("cursor","pointer")
 									  .attr("id","spotlightButtonData")
 		
 		spotlightButtonData.append("rect")
@@ -184,14 +188,18 @@
 				  .attr("y","56%")
 				  .append("xhtml:div")
 				  .append("p")
+				  .attr("id","prefMathCaption")
+				  .attr("margin-top",0)
+				  .attr("padding-top",0)
 				  .attr("font-size",20)
 				  .attr("color","white")
-				  .text("Check out the `Preface' for the story behind this project, and if you're feeling nerdy, the `Math' section outlines the algorithm used to pick the `franchise-definers'.")
+				  .text("Check out the `Preface' for the story behind this project, and if you're feeling nerdy, the `Math' section outlines the algorithms used to generate the visualization.")
 		
 		
 		/* GO TO THE PREFACE */
 		
 		spotlightButtonPreface= spotlight.append("g")
+									  .style("cursor","pointer")
 									  .attr("id","spotlightButtonPreface")
 		
 		spotlightButtonPreface.append("rect")
@@ -218,6 +226,7 @@
 		/* SEE THE MATH */
 		
 		spotlightButtonMath= spotlight.append("g")
+									  .style("cursor","pointer")
 									  .attr("id","spotlightButtonMath")
 		
 		spotlightButtonMath.append("rect")
@@ -286,6 +295,7 @@
 							  .data(projectNames)
 							  .enter()
 							  .append("g")
+							  .style("cursor","pointer")
 							  .on("click", function(d,i){
 								if(!spotlightVisible)
 								  showSpotlight();

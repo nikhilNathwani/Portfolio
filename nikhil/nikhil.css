@@ -62,7 +62,7 @@ html, body {
 #subtitle {
 	background-color: #FFAA00;
 	width: 100%;
-	padding-bottom: 40px;
+	padding-bottom: 30px;
 	text-align: center;
 }
 
@@ -84,7 +84,24 @@ html, body {
 	display: inline;
 }
 
+#contact{
+	text-align: right;
+	width: 100%;
+	color: #FFFFFF;
+	font-size: 100%;
+	float: right;
+	display: inline;
+	background-color: #FFAA00;
+	padding-bottom: 10px;
+	padding-right: 10px;
+}
+
 p {
 	color: #ffffff;
 	font-style: italic;
+}
+
+#prefMathCaption {
+	margin-top: 0px;
+	padding-top: 0px;
 }

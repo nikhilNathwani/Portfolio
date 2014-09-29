@@ -1,4 +1,3 @@
-
 import numpy
 import sys
 import time
@@ -123,9 +122,11 @@ def getWinSharesForTeam(team,year):
 	return lists
 
 #returns dict where keys are best players and values are stat lists
-def getBestWinSharePlayers(fn):
+def getBestWinSharePlayers(fn, wsFraction):
 	currentDir= os.getcwd()
 	playerLists= csvToLists(fn)
+
+	#print playerLists
 
 	total= 0
 	for x in playerLists:
@@ -135,9 +136,10 @@ def getBestWinSharePlayers(fn):
 	bestPlayers= {"all":total}	
 	tally= 0
 	for x in bestToWorst:
-		tally += float(x[3]) 
-		bestPlayers[x[0]]= x[1:3]+[float(elem) for elem in x[3:]]
-		if tally >= total/2:
+		wsPct= float(x[3])/total
+		tally += wsPct
+		bestPlayers[x[0]]= wsPct
+		if tally >= wsFraction:
 			return bestPlayers
 
 def getStatLine(team,player,year):
@@ -167,7 +169,7 @@ def calcEras(team):
 		currYear= int(yearFromURL(url))
 
 		#bests= {player : [stats]}
-		bests= getBestWinSharePlayers(currentDir + '/' + team + '/' + urlToFilename(url))
+		bests= getBestWinSharePlayers(currentDir + '/' + team + '/' + urlToFilename(url),0.5)
 		bests= [(k,v) for (k,v) in bests.iteritems() if k != "all"]
 		bests= sorted(bests, key=lambda tup: float(tup[1][3]), reverse=True)
 

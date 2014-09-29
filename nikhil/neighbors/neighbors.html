@@ -90,7 +90,7 @@
 				.style("text-anchor","middle")
 			svg.append("text")
 				.attr("class","credits")
-				.text("v1.0: Jun 2014")
+				.text("v1.0: Sep 2014")
 				.attr("x",w/2)
 				.attr("y",h-20)
 				.attr("fill","#999999")
@@ -152,6 +152,7 @@
 								
 				helpButton= svg.append("g")
 						.attr("class","helpButton")
+						.style("cursor","pointer")
 						.on("click", function() {
 							toggleClicked[toggleClicked.length-1]= 1;
 							unSelectToggles(toggleClicked.length-1);
@@ -221,7 +222,9 @@
 							.data(teamAndNeighs)
 							.enter()
 							.append("g")
-							.attr("class","toggleButton");					
+							.attr("class","toggleButton")
+							.style("cursor","pointer");
+							
 				toggleButton.append("circle") //Add circle to each group
 					.attr("class","toggleButton")
 					.attr("cx", function(d,i) {
@@ -282,13 +285,15 @@
 				//create groups for neighbor circles (planets)
 				for (i = 0; i < 16; i++) {
 					var orbGroup= svg.append("g")
-									.attr("class","orbit");
+									.attr("class","orbit")
+									.style("cursor","pointer");
 					orbGroup.append("circle");
 					txtGroup= orbGroup.append("svg");
 					
 					//Team name with link
 					txtGroup.append("a")
 							.attr("class","link")
+							.attr("target","_blank")
 							.append("text");
 							
 					//Appending rest of text

@@ -80,7 +80,7 @@
 					.style("text-anchor","middle")
 				svg.append("text")
 					.attr("class","credits")
-					.text("v1.0: Sep 2014")
+					.text("v1.0: Aug 2014")
 					.attr("x",creditX)
 					.attr("y",h-20)
 					.attr("fill","#999999")
@@ -212,6 +212,7 @@
 
 						//Draw circles
 						dots.append("circle")
+							.style("cursor","pointer")
 							.attr("class","year")
 							.attr("fill", function(d) {	return setDotColor(confFinals,finalsLoss,champion,d.year); })
 							.attr("r", rad)
@@ -293,7 +294,9 @@
 							.data(Object.keys(colors))
 							.enter()
 							.append("g")
-							.attr("class","toggleButton");					
+							.attr("class","toggleButton")
+							.style("cursor","pointer");
+							
 				toggleButton.append("circle") //Add circle to each group
 					.attr("class","toggleButton")
 					.attr("cx", function(d,i) {
@@ -356,6 +359,7 @@
 				
 				help= svg.append("g")
 						.attr("class","helpButton")
+						.style("cursor","pointer")
 						.on("click", function() {
 							showHelp()
 						})

@@ -3,6 +3,7 @@ from cvxopt import matrix, solvers
 from cvxopt.glpk import ilp
 import json
 import time
+import sys
 
 reignsByYear= {} #{year : [list of reigns]}
 reignDict= {} #{reign : index}
@@ -61,7 +62,7 @@ def getStatLine(team,player,year):
 		if str(year) in u:
 			url= u
 	currentDir= os.getcwd()
-	lists= csvToLists((currentDir + '/' + team + '/' + urlToFilename(url)))
+	lists= csvToLists((currentDir + '/teams/' + team + '/' + urlToFilename(url)))
 
 	seasonLine= {}
 	seasonLine["name"]=player
@@ -100,7 +101,7 @@ def setReignsByYear(team, cutoff):
 
 		if currYear != 2015:
 			#bests= {player : [stats]}
-			bests= getBestWinSharePlayers(currentDir + '/' + team + '/' + urlToFilename(url),cutoff)
+			bests= getBestWinSharePlayers(currentDir + '/teams/' + team + '/' + urlToFilename(url),cutoff)
 			bests= [(k,v) for (k,v) in bests.iteritems() if k != "all"]
 			bests= sorted(bests, key=lambda tup: float(tup[1]), reverse=True)
 
@@ -151,13 +152,13 @@ def genConstraintMatrix(finalCutoff):
 
 def solveIP(team, initialCutoff, finalCutoff):
 	global reignsByYear, reignDict, indexToReign
-	setReignsByYear("BOS", initialCutoff)
+	setReignsByYear(team, initialCutoff)
 	c,G,h,A,b,I,B= genConstraintMatrix(finalCutoff)
 	#sol=solvers.lp(c,A,b)
 	(status,x)= ilp(c,G,h,A,b,I,B)
-	print "Num reigns used", sum(list(x))
+	#print "Num reigns used", sum(list(x))
 	#x has value for each reign: 1 if reign should be included, 0 otherwise
-	reigns= sorted([(indexToReign[i].player,indexToReign[i].start,indexToReign[i].end) for i,val in enumerate(x) if val==1],key=lambda tup: tup[2])
+	reigns= sorted([(indexToReign[i].player,indexToReign[i].start,indexToReign[i].end) for i,val in enumerate(x) if val==1],key=lambda tup: tup[1])
 
 	playerStats= []
 	for player,start,end in reigns:
@@ -167,15 +168,26 @@ def solveIP(team, initialCutoff, finalCutoff):
 			entry["stats"].append(seasonLine)
 		playerStats.append(entry)
 
+	playerStats= consolidateReigns(playerStats)
+
 	reignsByYear= {}
 	reignDict= {}
 	indexToReign= {}
 
-	with open(os.getcwd()+'/eras.json', 'w') as outfile:
+	with open(os.getcwd()+'/jsons/'+team+'.json', 'w') as outfile:
 		json.dump(playerStats, outfile)
 
 	return playerStats
 
+def consolidateReigns(playerStats):
+	playerDict= {}
+	for ps in playerStats:
+		player= ps["player"]
+		playerDict[player]= playerDict.get(player,[]) + ps["stats"]
+
+	consolidated= sorted(playerDict.iteritems(), key=lambda ps: ps[1][0]["year"])
+	newJSON= [{"player":p,"stats":s} for p,s in consolidated]
+	return newJSON
 
 
 	
@@ -209,5 +221,6 @@ def allDataToJSON():
 
 if __name__ == "__main__":
 	start= time.time()
-	print solveIP("BOS",0.5,0.4)
+	#["ATL", "BOS", "BRK", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN", "NOP", "NYK", "OKC", "ORL", "PHI", "PHO", "POR", "SAC", "SAS", "TOR", "UTA", "WAS"]:
+	solveIP(sys.argv[1],float(sys.argv[2]),float(sys.argv[3]))
 	print "Time taken:",time.time()-start
