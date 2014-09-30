@@ -5,43 +5,20 @@ html, body {
 	padding: 0px;
 }
 
-#spotlight {
-	background-color: #99CCFF;
-	width: 80%;
-	margin-left: 10%;
-	position: absolute;
+#home {
+    float: left;
+	margin-left: 10px;
 }
 
-.fa fa-chevron-circle-left {
-	font-size: 32px;
-	display: inline;
+#contact {
+    float: right;
+	margin-right: 10px;
 }
 
-#spotlightTitle {
-	fill: white;
+#home,#contact {
+	color: white;
 	font-size: 200%;
-}
-
-#spotlightSubtitle {
-	fill: white;
-	font-size: 100%;
-}
-
-#projects {
-	margin-left: 10%;
-	padding-bottom: 0px;
-	height: 800px;
-	width: 80%;
-	text-align: center;
-	background-color: #FFCC99;
-}
-
-#credits {
-	margin-left: 10%;
-	padding-bottom: 0px;
-	width: 80%;
-	text-align: center;
-	background-color: #CCE5FF;
+	margin-top: 10px;
 }
 
 #header1 {
@@ -84,24 +61,48 @@ html, body {
 	display: inline;
 }
 
-#contact{
-	text-align: right;
-	width: 100%;
-	color: #FFFFFF;
-	font-size: 100%;
-	float: right;
-	display: inline;
-	background-color: #FFAA00;
-	padding-bottom: 10px;
-	padding-right: 10px;
+#spotlight {
+	background-color: #99CCFF;
+	width: 80%;
+	margin-left: 10%;
+	position: absolute;
 }
 
-p {
-	color: #ffffff;
-	font-style: italic;
+.fa fa-chevron-circle-left {
+	font-size: 32px;
+	display: inline;
+}
+
+#spotlightTitle {
+	fill: white;
+	font-size: 200%;
+}
+
+#spotlightSubtitle {
+	fill: white;
+	font-size: 100%;
+}
+
+#projects {
+	margin-left: 10%;
+	padding-bottom: 0px;
+	height: 800px;
+	width: 80%;
+	text-align: center;
+	background-color: #FFCC99;
+}
+
+#credits {
+	margin-left: 10%;
+	padding-bottom: 0px;
+	width: 80%;
+	text-align: center;
+	background-color: #CCE5FF;
 }
 
 #prefMathCaption {
+	color: #ffffff;
+	font-style: italic;
 	margin-top: 0px;
 	padding-top: 0px;
 }
