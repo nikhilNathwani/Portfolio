@@ -5,34 +5,54 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <title>Nikhil Nathwani</title>
 	<script type="text/javascript" src="d3/d3.js"></script>
-	<link type="text/css" rel="stylesheet" href="/main.css" />
+	<link type="text/css" rel="stylesheet" href="main.css" />
     <link type="text/css" rel="stylesheet" href="nikhil.css" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">	
 	
   </head>
   <body>
+	
 	  <div id="navBar">
 		<a id="home" style="cursor:pointer" href="/"> <i class="fa fa-home"></i> </a>
-		<a id= "contact" style="cursor:pointer" href="/"> Contact me</a>
+		<div id="contactDiv">
+		  <p id="contactMe">Contact me:</p>
+		  <a class="contactButton" id="email" style="cursor:pointer" target="_blank" href="/"> <i class="fa fa-envelope"></i></a>
+		  <a class="contactButton" id="linkedin" style="cursor:pointer" target="_blank" href="https://www.linkedin.com/pub/nikhil-nathwani/3a/b81/48b/"> <i class="fa fa-linkedin"></i></a>
+		  <a class="contactButton" id="twitter" style="cursor:pointer" target="_blank" href="https://twitter.com/nikhilhyphen"> <i class="fa fa-twitter"></i></a>
+		  <a class="contactButton" id="github" style="cursor:pointer" target="_blank" href="https://github.com/nikhilNathwani"> <i class="fa fa-github"></i></a>
+		  <a class="contactButton" id="instagram" style="cursor:pointer" target="_blank" href="http://instagram.com/nikhilhyphen/"> <i class="fa fa-instagram"></i></a>
+		</div>
 	  </div>
-	  <div id="header1">
-		  Hi, I'm Nikhil
-		  <audio id="mp3" src="pronounce.mp3"></audio>
-		  <a id="pronounce" style="cursor:pointer" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
-	  </div>
-	  <div id="subtitle">
-		  <div id= "inlines">
-			  I play
+	  
+	  <div id="header">
+		<div id="headerImageDiv">
+		  <img src="selfieSite.jpg" id="headerImage"></img>
+		</div>
+		
+		<div id= "headerTextDiv">
+		  <div id="hello">
+			  Hi, I'm Nikhil
+			  <audio id="mp3" src="pronounce.mp3"></audio>
+			  <a id="pronounce" style="cursor:pointer" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
 		  </div>
-		  <div id= "paren">
-			  (with)
+		  <div id="subtitle">
+			  <div id= "inlines">
+				  I play
+			  </div>
+			  <div id= "paren">
+				  (with)
+			  </div>
+			  <div id= "inlines">
+				  professional basketball
+			  </div>
+			  <div id= "paren">
+				  (data).
+			  </div>
 		  </div>
-		  <div id= "inlines">
-			  professional basketball
-		  </div>
-		  <div id= "paren">
-			  (data).
-		  </div>
+		</div>
+		
+		<div id= "headerFillerDiv">
+		</div>
 	  </div>
   
 	<script type="text/javascript">
@@ -47,10 +67,11 @@
 		var spotlightHeight= 400;
 	
 		<!------------------------------------------- INITIALIZE THREE MAIN SVGs-------------------------------------------->
-	
+		
 		var spotlight= d3.select("body")
 					.append("svg")
 					.attr("id","spotlight")
+					.attr("x",0)
 					.attr("y",0)
 					.attr("height",0)
 						
@@ -61,13 +82,14 @@
 						.attr("y",0)
 						.attr("height", 250*Math.floor((projectNames.length+1)/2) + 2*projMargin)
 		
+		
 		var credits= d3.select("body")
 						.append("svg")
 						.attr("id","credits")
 						.attr("x","50%")
 						.attr("y", 250*Math.floor((projectNames.length+1)/2) + 2*projMargin)
 						.attr("height",60)
-						
+					
 		
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CREDITS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 			
@@ -258,7 +280,7 @@
 		<!-------------------------------------------- SHOW/HIDE SPOTLIGHT CONTENT ------------------------------------------>
 		function showSpotlight() {
 			spotlightVisible= true;
-			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))+spotlightHeight; })
+			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y")); })
 			spotlight.transition().delay(0).duration(500).attr("height",spotlightHeight)
 		}
 		
@@ -289,7 +311,7 @@
 		
 		function hideSpotlight() {
 			spotlightVisible= false;
-			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y"))-spotlightHeight; })
+			projects.selectAll("#projGroup").transition().delay(0).duration(500).attr("y",function() {return parseFloat(d3.select(this).attr("y")); })
 			spotlight.transition().delay(0).duration(500).attr("height",0)
 		}
 		
@@ -323,7 +345,7 @@
 					  .attr("y",function(d,i) {
 						  return 80 + Math.floor(i/2)*248;
 						})
-					
+	  
 	</script>
 	
   </body>

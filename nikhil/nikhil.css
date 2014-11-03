@@ -1,12 +1,45 @@
 html, body {
-	background-color: #CCE5FF;
+	background-color: #d4dcde;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	margin: 0px;
 	padding: 0px;
 }
 
-#header1 {
-	background-color: #FFAA00;
+#header {
+	display: block;
+}
+
+#headerImageDiv {
+	float: left;
+	height: 188px;
+	width: 16%;
+	background-color: #727c91;
+}
+
+#headerImage {
+	/*height: 95%;*/
+	height: 100%;
+	width: auto;
+	/*margin-left: 2.5%;
+	margin-top: 5%;*/
+}
+
+#headerTextDiv {
+	float: left;
+	width: 70%;
+	height: 188px;
+	background-color: #727c91;
+}
+
+#headerFillerDiv {
+	float: left;
+	width: 14%;
+	height: 188px;
+	background-color: #727c91;
+}
+
+#hello {
+	float: left;
 	width: 100%;
 	height: 120px;
 	padding-top: 0px;
@@ -21,7 +54,6 @@ html, body {
 }
 
 #subtitle {
-	background-color: #FFAA00;
 	width: 100%;
 	padding-bottom: 30px;
 	text-align: center;
@@ -31,7 +63,7 @@ html, body {
 	width: 100%;
 	height: 78px;
 	text-align: center;
-	color: #ffffff;
+	color: #d4dcde;
 	font-size: 200%;
 	display: inline;
 }
@@ -40,7 +72,7 @@ html, body {
 	width: 100%;
 	height: 78px;
 	text-align: center;
-	color: #FF8000;
+	color: #9caeb2;
 	font-size: 200%;
 	display: inline;
 }
@@ -49,7 +81,6 @@ html, body {
 	background-color: #99CCFF;
 	width: 80%;
 	margin-left: 10%;
-	position: absolute;
 }
 
 .fa fa-chevron-circle-left {
@@ -73,7 +104,7 @@ html, body {
 	height: 800px;
 	width: 80%;
 	text-align: center;
-	background-color: #FFCC99;
+	background-color: #d4dcde;
 }
 
 #credits {

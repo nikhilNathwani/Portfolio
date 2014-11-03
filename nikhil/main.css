@@ -1,24 +1,42 @@
 #home {
     float: left;
 	margin-left: 10px;
-	font-size: 200%;
-	margin-top: 7px;
+	font-size: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
-#contact {
+#contactDiv {
     float: right;
 	margin-right: 10px;
-	font-size: 150%;
-	margin-top: 10px;
+	font-size: 20px;
+	margin-top: 14px;
 }
 
-#home,#contact {
+#home,#contactDiv {
 	color: white;
 }
 
+i:hover { 
+    color: orange;
+}
+
+#contactMe {
+	display:inline;
+	margin-right: 10px;
+}
+
+.contactButton {
+	display: inline;
+	margin-right: 10px;
+	color: white;
+	fill: white;
+	font-size: 20px;
+}
+
 #navBar {
-	height: 50px;
+	height: 48px;
 	width: 100%;
-	background-color: #FFAA00;
+	background-color: #727c91;
 /*	position: fixed;*/
 }
