@@ -6,6 +6,10 @@
 	float: left;
 }
 
+#profiles {
+	float: left;
+}
+
 .axis path, .axis line {
     fill: none;
     stroke: black;

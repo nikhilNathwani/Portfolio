@@ -23,8 +23,9 @@
 		</style>
     </head>
     <body>
-		<div id="graph"></div>
 		<div id="toggle"></div>
+		<div id="graph"></div>
+		<div id="profiles"></div>
         <script type="text/javascript">
             w= 700;
             h= 700;
@@ -49,7 +50,13 @@
 			//Toggle SVG
 			toggle= d3.select("#toggle")
 						.append("svg")
-						.attr("width","500")
+						.attr("width","215")
+						.attr("height",h)
+						
+			//Player Profle SVG
+			profiles= d3.select("#profiles")
+						.append("svg")
+						.attr("width","300")
 						.attr("height",h)
 						
             d3.json("roi.json", function(playerStatsByTeam) {
@@ -161,7 +168,7 @@
 								return "#777777";
 							})
 						.on("click",function(d) {
-								showCoords(d);
+								setProfile(d);
 							})
 						
 				
@@ -191,14 +198,23 @@
 				
 				
 				/*Conference titles*/
-				/*toggle.append("text")
-						.attr("id","east")
-						.attr("fill","grey")
-						.attr("font-size')*/
-				
-				
-				
-				/*Division Titles*/ 
+				toggle.append("text")
+						.attr("fill","#AAAAAA")
+						.attr("font-size", 36)
+						.attr("x",90+27.5)
+						.attr("y",padding)
+						.attr("text-anchor","middle")
+						.attr("dominant-baseline","hanging")
+						.text("EAST")
+						
+				toggle.append("text")
+						.attr("fill","#AAAAAA")
+						.attr("font-size", 36)
+						.attr("x",90+27.5)
+						.attr("y",padding + 315)
+						.attr("text-anchor","middle")
+						.attr("dominant-baseline","hanging")
+						.text("WEST")
 				
 				/*Creating the toggle buttons*/
 				toggleButtons= toggle.selectAll("g.toggleButton")
@@ -206,24 +222,53 @@
 										.enter()
 										.append("g")
 										.attr("class","toggleButton")
-										.on("click",function(d){zoomTeamDots(d["team"]);})
-						
+										.style("cursor","pointer")
+										.on("click",function(d){zoomTeamDots(d["team"]);});
+				
+				var confTitleHeight= 45;		
 				
 				toggleButtons.append("rect")
 								.attr("fill", function(d){return colors[d["team"]];})
-								.attr("x",function(d,i){return 20 + 50*Math.floor((i%15)/5);})
-								.attr("y",function(d,i){return padding + 100*Math.floor(i/15) + 41*(5*Math.floor(i/15)+(i%15)%5);})
-								.attr("width",40)
-								.attr("height",25)
+								.attr("x",function(d,i){return 30 + 60*Math.floor((i%15)/5);})
+								.attr("y",function(d,i){return confTitleHeight + padding + 65*Math.floor(i/15) + 50*(5*Math.floor(i/15)+(i%15)%5);})
+								.attr("rx", 5)
+								.attr("ry", 5)
+								.attr("width",55)
+								.attr("height",35)
 				
 				toggleButtons.append("text")
 								.attr("fill","white")
 								.attr("font-size", 12)
-								.attr("x",function(d,i){return 40 + 50*Math.floor((i%15)/5);})
-								.attr("y",function(d,i){return padding + 12.5 + 100*Math.floor(i/15) + 41*(5*Math.floor(i/15)+(i%15)%5);})
+								.attr("x",function(d,i){return 57.5 + 60*Math.floor((i%15)/5);})
+								.attr("y",function(d,i){return confTitleHeight + padding + 17.5 + 65*Math.floor(i/15) + 50*(5*Math.floor(i/15)+(i%15)%5);})
 								.attr("text-anchor","middle")
 								.attr("dominant-baseline","central")
 								.text(function(d){return d["team"];})
+								
+				
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Player Profile section
+				stats= ["Name","Win Share %","Salary %"]
+				statsToID= {"Name":"name","Win Share %":"ws","Salary %":"salary"}
+				profiles.selectAll("text")
+						.data(stats)
+						.enter()
+						.append("text")
+						.attr("id",function(d){return statsToID[d];})
+						.attr("fill","grey")
+						.attr("font-size",16)
+						.attr("dominant-baseline","hanging")
+						.attr("x",30)
+						.attr("y",function(d,i){return padding + i*30;});
+					
+				function setProfile(player) {
+					profiles.select("#name").text("Name: " + player["name"]);
+					profiles.select("#ws").text("Win Share %: " + parseFloat(player["ws"]).toFixed(3));
+					profiles.select("#salary").text("Salary %: " + parseFloat(player["salary"]).toFixed(3));
+				}
+				
+				
+				
+				
 				
             });
         </script>
