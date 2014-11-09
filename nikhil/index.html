@@ -12,49 +12,49 @@
   </head>
   <body>
 	
-	  <div id="navBar">
-		<a id="home" style="cursor:pointer" href="/"> <i class="fa fa-home"></i> </a>
-		<div id="contactDiv">
-		  <p id="contactMe">Contact me:</p>
-		  <a class="contactButton" id="email" style="cursor:pointer" target="_blank" href="/"> <i class="fa fa-envelope"></i></a>
-		  <a class="contactButton" id="linkedin" style="cursor:pointer" target="_blank" href="https://www.linkedin.com/pub/nikhil-nathwani/3a/b81/48b/"> <i class="fa fa-linkedin"></i></a>
-		  <a class="contactButton" id="twitter" style="cursor:pointer" target="_blank" href="https://twitter.com/nikhilhyphen"> <i class="fa fa-twitter"></i></a>
-		  <a class="contactButton" id="github" style="cursor:pointer" target="_blank" href="https://github.com/nikhilNathwani"> <i class="fa fa-github"></i></a>
-		  <a class="contactButton" id="instagram" style="cursor:pointer" target="_blank" href="http://instagram.com/nikhilhyphen/"> <i class="fa fa-instagram"></i></a>
+	<div id="navBar">
+	  <a id="home" style="cursor:pointer" href="/"> <i class="fa fa-home"></i> </a>
+	  <div id="contactDiv">
+		<p id="contactMe">Contact me:</p>
+		<a class="contactButton" id="email" style="cursor:pointer" target="_blank" href="mailto:nikhilhyphen@gmail.com?Subject=Hey%20Nikhil,%20it's%20one%20of%20your%20favorite%20people"> <i class="fa fa-envelope"></i></a>
+		<a class="contactButton" id="linkedin" style="cursor:pointer" target="_blank" href="https://www.linkedin.com/pub/nikhil-nathwani/3a/b81/48b/"> <i class="fa fa-linkedin"></i></a>
+		<a class="contactButton" id="twitter" style="cursor:pointer" target="_blank" href="https://twitter.com/nikhilhyphen"> <i class="fa fa-twitter"></i></a>
+		<a class="contactButton" id="github" style="cursor:pointer" target="_blank" href="https://github.com/nikhilNathwani"> <i class="fa fa-github"></i></a>
+		<a class="contactButton" id="instagram" style="cursor:pointer" target="_blank" href="http://instagram.com/nikhilhyphen/"> <i class="fa fa-instagram"></i></a>
+	  </div>
+	</div>
+	
+	<div id="header">
+	  <div id="headerImageDiv">
+		<img src="selfieSite.jpg" id="headerImage"></img>
+	  </div>
+	  
+	  <div id= "headerTextDiv">
+		<div id="hello">
+			Hi, I'm Nikhil
+			<audio id="mp3" src="pronounce.mp3"></audio>
+			<a id="pronounce" style="cursor:pointer" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
+		</div>
+		<div id="subtitle">
+			<div id= "inlines">
+				I play
+			</div>
+			<div id= "paren">
+				(with)
+			</div>
+			<div id= "inlines">
+				professional basketball
+			</div>
+			<div id= "paren">
+				(data).
+			</div>
 		</div>
 	  </div>
 	  
-	  <div id="header">
-		<div id="headerImageDiv">
-		  <img src="selfieSite.jpg" id="headerImage"></img>
-		</div>
-		
-		<div id= "headerTextDiv">
-		  <div id="hello">
-			  Hi, I'm Nikhil
-			  <audio id="mp3" src="pronounce.mp3"></audio>
-			  <a id="pronounce" style="cursor:pointer" onclick="var n= document.getElementById('mp3'); n.load(); n.play()"><i class="fa fa-volume-up"></i> </a>
-		  </div>
-		  <div id="subtitle">
-			  <div id= "inlines">
-				  I play
-			  </div>
-			  <div id= "paren">
-				  (with)
-			  </div>
-			  <div id= "inlines">
-				  professional basketball
-			  </div>
-			  <div id= "paren">
-				  (data).
-			  </div>
-		  </div>
-		</div>
-		
-		<div id= "headerFillerDiv">
-		</div>
+	  <div id= "headerFillerDiv">
 	  </div>
-  
+	</div>
+
 	<script type="text/javascript">
 		var projectNames= ["eras","neighbors"];
 		var spotlightTitles= ["Eras of the NBA","Playoff Success Orbit"];
@@ -95,11 +95,11 @@
 			
 		credits.append("text")
 					.attr("class","credits")
-					.text("Copyright 2014 Nikhil Nathwani | Contact: nikhilhyphen@gmail.com")
+					.text("Copyright 2014 Nikhil Nathwani | Email: nikhilhyphen@gmail.com")
 					.attr("x","50%")
 					.attr("y","100%")
 					.attr("dy",-25)
-					.attr("fill","#888888")
+					.attr("fill","#ffffff")
 					.style("text-anchor","middle")
 						
 		
