@@ -1,0 +1,27 @@
+#graph {
+	float: left;
+}
+
+#toggle {
+	float: left;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 15px;
+}
+
+#lines {
+	stroke-width: 2;
+	stroke: #eeeeee;
+}
+
+#backgroundRect {
+	fill: #cccccc;
+}
