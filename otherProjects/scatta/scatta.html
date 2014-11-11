@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Nikhil Nathwani</title>
+    <link type="text/css" rel="stylesheet" href="scatta.css" />
+	<script type="text/javascript" src="d3/d3.js"></script>
+	<script src="http://dimplejs.org/dist/dimple.v2.1.0.min.js"></script>
+  </head>
+  <body>
+
+	<script type="text/javascript">
+	  w= 700;
+	  h= 700;
+	  var svg= d3.select("body")
+				  .append("svg")
+				  .attr("width", w)
+				  .attr("height", h)
+	  
+	  x0= 1951
+	  xAxisLoc= 0
+	  xN= 2014
+	  y0= -10
+	  yAxisLoc= 1970;
+	  yN= 100
+	  padding= 50
+	  t= 5;
+	  
+	  //Defining the scales and axes
+	  var xScale = d3.scale.linear()
+					  .domain([x0, xN])
+					  .range([padding, w-padding]);		  
+	  var yScale = d3.scale.linear()
+					  .domain([y0, yN])
+					  .range([h-padding, padding]);
+
+	  var xAxis = d3.svg.axis()
+					  .scale(xScale)
+					  .ticks(t)
+					  .orient("bottom")
+					  .tickFormat(d3.format("d"));
+	  var yAxis = d3.svg.axis()
+					  .scale(yScale)
+					  .ticks(t)
+					  .orient("left")
+					  .tickFormat(d3.format("d"));
+
+
+	  //Drawing rect on graph for backgroud color
+	  svg.append("rect")
+			.attr("id","backgroundRect")
+			.attr("x", xScale(x0))
+			.attr("y", yScale(yN))
+			.attr("width",(w-padding)-(padding))
+			.attr("height",(h-padding)-(padding))
+
+
+	  //Drawing lines on graph
+	  lines= svg.append("g")
+					.attr("id","lines")
+
+	  verticals= lines.append("g")
+						.attr("id","verticalLines")
+	  verticals.selectAll("line")
+				.data(xAxis.scale().ticks(t))
+				.enter()
+				.append("line")
+				.attr("x1",function(d) {
+					return xScale(d);
+				})
+				.attr("x2",function(d) {
+					return xScale(d);
+				})
+				.attr("y1", yScale(y0))
+				.attr("y2", yScale(yN))
+
+	  horizontals= lines.append("g")
+						.attr("id","horizonalLines")
+	  horizontals.selectAll("line")
+				.data(yAxis.scale().ticks(t))
+				.enter()
+				.append("line")
+				.attr("x1", xScale(x0))
+				.attr("x2", xScale(xN))
+				.attr("y1",function(d) {
+					return yScale(d);
+				})
+				.attr("y2",function(d) {
+					return yScale(d);
+				})
+
+	  //Drawing the axes
+	  svg.append("g")
+		  .attr("class", "axis")
+		  .attr("id","xAxis")
+		  .attr("transform", "translate("+0+"," + yScale(xAxisLoc) + ")")
+		  .call(xAxis);
+	  svg.append("g")
+		  .attr("class", "axis")
+		  .attr("id","yAxis")
+		  .attr("transform", "translate("+ xScale(yAxisLoc) +"," + 0 + ")")
+		  .call(yAxis);	
+		
+		
+	</script>
+
+	
+  </body>
+</html>

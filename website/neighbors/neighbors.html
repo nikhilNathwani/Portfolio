@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>NBA Playoff Sucess Orbit</title>
+        <script type="text/javascript" src="../d3/d3.js"></script>
+		<script type="text/javascript" src="util.js"></script>
+		<script type="text/javascript" src="view.js"></script>
+        <style type="text/css">
+			text {
+				font-family: sans-serif;
+				text-anchor: middle;  
+			}
+			.title {
+				font-size: 36px;
+				fill: rgb(123,123,123);
+				text-anchor: start;
+			}
+			.subtitle {
+				font-size: 20px;
+				fill: rgb(70,70,70);
+				text-anchor: start;
+			}
+		</style>
+    </head>
+    <body>
+        <script type="text/javascript">
+			var teamNames= ["ATL", "BRK", "CHA", "CHI", "DAL", "GSW", "HOU", "IND", "LAC", "MEM", "MIA", "OKC", "POR", "SAS", "TOR", "WAS"]
+			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#F26532", "CHH":"#25799A", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NJN":"#002258", "NOH":"#0095CA", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAS":"#BEC8C9", "SAC":"#743389", "SEA":"#19542D", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874","HELP":"#d8d8f0"}
+            //Width and height
+            var w= 1250;
+            var h= 1111;
+            var mainR= w/12; //radius of main circle
+            var distScale= 150
+			var zoomRad= w/8;
+			var offset= 15;
+			var leftPad= 50;
+			var toggleClicked= [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; //used in keeping toggle circles highlighted
+			var numAxes= 1;
+			var toggleButtonDiam= 60;
+			var toggleGroupWidth= 2.5*toggleButtonDiam + 2*leftPad;
+			var imageSidelen= 200;
+			var orbitCenterX= toggleGroupWidth+zoomRad+distScale+offset+mainR;
+			var orbitCenterY= 5+zoomRad+distScale+offset+mainR;
+			var minNeighRad= w/120;
+			var winRadScale= w/120;
+			
+			//Help button sizings
+			var helpRad= 40;
+			var onHelp= true;
+			
+			//Create SVG element
+			var svg= d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+						
+						
+						
+			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TITLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			
+			svg.append("text")
+				.attr("class","title")
+				.text("Teams don't fall far from the playoff tree")
+				.attr("x",10)
+				.attr("y",45)
+			svg.append("text")
+				.attr("class","subtitle")
+				.text("Gauging playoff potential based on success of similar teams")
+				.attr("x",15)
+				.attr("y",80)*/
+			
+			
+			
+			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CREDITS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+			
+			svg.append("text")
+				.attr("class","credits")
+				.text("coded & designed by: Nikhil Nathwani")
+				.attr("x",w/2)
+				.attr("y",h-60)
+				.attr("fill","#999999")
+				.style("text-anchor","middle")
+			svg.append("text")
+				.attr("class","credits")
+				.text("source: basketball-reference.com")
+				.attr("x",w/2)
+				.attr("y",h-40)
+				.attr("fill","#999999")
+				.style("text-anchor","middle")
+			svg.append("text")
+				.attr("class","credits")
+				.text("v1.0: Sep 2014")
+				.attr("x",w/2)
+				.attr("y",h-20)
+				.attr("fill","#999999")
+				.style("text-anchor","middle")
+			
+			
+			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~AXES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+						
+			//create group for concentric axes
+			var axes= svg.append("g")
+						.attr("class", "axes")
+			for (i=0; i<numAxes; i++) {
+				axes.append("ellipse")
+					.attr("class","axes")
+					.attr("cx",orbitCenterX)
+					.attr("cy",orbitCenterY)
+			}
+			formatAxes();
+			hideOrbit();
+			
+			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~HELP SCREEN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+			
+			//group for help items
+			help= svg.append("image")
+					.attr("xlink:href", "help.png")
+					.attr("x", 380)
+					.attr("y", 65)
+					.attr("width",1767/3)
+					.attr("height",2505/3)
+					.attr("display","inline")
+			
+			
+			//load and display neighbor data
+			d3.json("neighbors.json", function(teamAndNeighs) {		
+			
+				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CENTRAL SUN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+				
+				//Create main circle
+				sun= svg.append("g")
+						.attr("class","sun")	
+				sun.append("circle")
+					.attr("class","sun")
+					.attr("cx",orbitCenterX)
+					.attr("cy",orbitCenterY)
+					.attr("r",mainR)
+					.attr("fill","none")
+				sun.append("a")
+					.attr("class","link")
+					.append("text");
+				for(i=0;i<5;i++) {
+					sun.append("text")
+						.attr("class","sun")
+						.attr("fill","white")
+				}
+				
+				
+				
+				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~HELP BUTTON~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+								
+				helpButton= svg.append("g")
+						.attr("class","helpButton")
+						.style("cursor","pointer")
+						.on("click", function() {
+							toggleClicked[toggleClicked.length-1]= 1;
+							unSelectToggles(toggleClicked.length-1);
+							showHelp()
+						})
+						.on("mouseover",function() {
+								svg.select("g.helpButton").select("circle")
+														.attr("stroke-width",5)
+														.attr("stroke",d3.rgb("#d8bfd8").darker(1));
+						})
+						.on("mouseout",function() {
+								svg.select("g.helpButton").select("circle")
+														.attr("stroke-width",5)
+														.attr("stroke",d3.rgb("#d8bfd8"));
+						});
+				
+				helpButton.append("circle")
+					.attr("cx","90%")
+					.attr("cy","6%")
+					.attr("r", helpRad)
+					.attr("fill","#d8bfd8") //BC8F8F,FA8072
+					
+					
+				helpButton.append("text")
+					.attr("x","90%")
+					.attr("y","6%")
+					.attr("font-size",helpRad)
+					.attr("font-family","sans-serif")
+					.attr("fill","white")
+					.attr("text-anchor","middle")
+					.attr("dominant-baseline","central")
+					.text("?")
+				
+				
+				
+				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TOGGLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+				
+				//create left bar of 2014 playoff teams
+				toggle= svg.append("svg")
+							.attr("class","toggle")
+							.attr("x",0)
+							.attr("y",30)
+							.attr("width", toggleGroupWidth)
+							.attr("height", h);
+				
+				togTitleFontSize= 20;
+				togConfFontSize= 16;
+				confs= ["WEST","EAST"];
+				toggle.append("text")
+						.attr("fill","#999999")
+						.text("2014 Playoff Teams")
+						.attr("font-size", togTitleFontSize)
+						.attr("x", toggleGroupWidth/2)
+						.attr("y", togTitleFontSize)
+						.attr("text-anchor","middle")
+				for(i=0;i<confs.length;i++){
+				toggle.append("text")
+						.attr("fill","#999999")
+						.text(confs[i])
+						.attr("font-size", togConfFontSize)
+						.attr("x", leftPad + toggleButtonDiam/2 + i*(3*toggleButtonDiam/2))
+						.attr("y", togTitleFontSize + 2*togConfFontSize)
+						.attr("text-anchor","middle")
+				}
+				
+				toggleButton= toggle.selectAll("g.toggleButton") //Add groups for each toggle button
+							.data(teamAndNeighs)
+							.enter()
+							.append("g")
+							.attr("class","toggleButton")
+							.style("cursor","pointer");
+							
+				toggleButton.append("circle") //Add circle to each group
+					.attr("class","toggleButton")
+					.attr("cx", function(d,i) {
+								if (i<8) {
+									return toggleGroupWidth - leftPad - toggleButtonDiam/2;
+								}
+								else {
+									return leftPad + toggleButtonDiam/2;
+								}
+							})
+					.attr("cy", function(d,i) {
+							return 2.5*togTitleFontSize + 2.5*togConfFontSize + (toggleButtonDiam+5)*(i%8);
+						})
+					.attr("r", toggleButtonDiam/2)
+					.attr("fill", function(d) {
+								return (d.team in colors) ? colors[d.team] : "#000000";
+							});	
+				toggleButton.append("text") //Add text to each group
+					.attr("class","toggleButton")
+					.attr("id","text")
+					.attr("x", function(d,i) {
+								if (i<8) {
+									return toggleGroupWidth - leftPad - toggleButtonDiam/2;
+								}
+								else {
+									return leftPad + toggleButtonDiam/2;
+								}
+							})
+					.attr("y", function(d,i) {
+							return 2.5*togTitleFontSize + 2.5*togConfFontSize + (toggleButtonDiam+5)*(i%8);
+						})
+					.attr("font-size",toggleButtonDiam/4)
+					.attr("font-family","sans-serif")
+					.attr("dominant-baseline","central")
+					.attr("fill", "white")
+					.text(function(d) { return d.team; });	
+				toggleButton.on("mouseover",function() { //Add event handler to each GROUP (not each individual circle/text!)
+									color= d3.select(this).select("circle").attr("fill");
+									d3.select(this).select("circle").attr("stroke",d3.rgb(color).darker(1));
+									d3.select(this).select("circle").attr("stroke-width","5");
+								})
+						.on("mouseout",function(d,i) {
+										if(toggleClicked[i]==0) {
+											d3.select(this).select("circle").attr("stroke-width","0");
+										}
+									})
+						.on("click", function(d,i) {
+										unSelectToggles(i);
+										toggleClicked[i]= 1;
+										setOrbit(d);
+										setZoomText(d);
+									});
+				
+				
+				
+				/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NEIGHBORS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+				
+				//create groups for neighbor circles (planets)
+				for (i = 0; i < 16; i++) {
+					var orbGroup= svg.append("g")
+									.attr("class","orbit")
+									.style("cursor","pointer");
+					orbGroup.append("circle");
+					txtGroup= orbGroup.append("svg");
+					
+					//Team name with link
+					txtGroup.append("a")
+							.attr("class","link")
+							.attr("target","_blank")
+							.append("text");
+							
+					//Appending rest of text
+					for (j=0; j<7; j++) {
+						txtGroup.append("text");
+					}
+				}
+			});
+        </script>
+    </body>
+</html>

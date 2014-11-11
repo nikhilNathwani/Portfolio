@@ -1,0 +1,8 @@
+~CSV~
+There is a CSV for each year of each team’s history. The format of an individual CSV is: 
+[player name] | [player URL] | [team URL] | [win shares] | [win share %]
+
+
+~JSON~
+There is a JSON file for each team. The format of an individual JSON file is: 
+[{player:””, stats:[playerURL:””, name:””, season:’xx-‘xx, year:xxxx, teamURL:””, winShares:x.x, winSharePct:xx%]}, …]
