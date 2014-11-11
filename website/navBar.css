@@ -24,6 +24,8 @@ i:hover {
 #contactMe {
 	display:inline;
 	margin-right: 10px;
+	color: white;
+	word-spacing: normal;
 }
 
 .contactButton {
