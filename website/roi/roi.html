@@ -27,22 +27,27 @@
 		<div id="graph"></div>
 		<div id="profiles"></div>
         <script type="text/javascript">
-            w= 700;
+            
+			w= 700;
             h= 700;
 			
-			x0= -10
-			xAxisLoc= 0
-			xN= 35
-			y0= 0
-			yAxisLoc= 0
-			yN= 42
-			padding= 50
+			//Graph variables
+			x0= -10;
+			xAxisLoc= 0;
+			xN= 35;
+			y0= 0;
+			yAxisLoc= 0;
+			yN= 42;
+			padding= 50;
 			t= 5;
-				
+			graphTitleHeight= 100;
+			leftAxisTitle= 100;
+			bottomAxisTitle= 100;
+			
 			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#25799A", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
             
             //Create SVG element
-            svg= d3.select("#graph")
+            graph= d3.select("#graph")
                     .append("svg")
                     .attr("width",w)
                     .attr("height",h)                  
@@ -50,7 +55,7 @@
 			//Toggle SVG
 			toggle= d3.select("#toggle")
 						.append("svg")
-						.attr("width","215")
+						.attr("width","245")
 						.attr("height",h)
 						
 			//Player Profle SVG
@@ -64,10 +69,10 @@
 				//Defining the scales and axes
 				var xScale = d3.scale.linear()
 								.domain([x0, xN])
-								.range([padding, w-padding]);		  
+								.range([leftAxisTitle, w-leftAxisTitle]);		  
 				var yScale = d3.scale.linear()
 								.domain([y0, yN])
-								.range([h-padding, padding]);
+								.range([h-bottomAxisTitle, graphTitleHeight]);
 	  
 				var xAxis = d3.svg.axis()
 								.scale(xScale)
@@ -80,18 +85,17 @@
 								.orient("left")
 								.tickFormat(d3.format("d"));
 	  
-	  
 				//Drawing rect on graph for backgroud color
-				svg.append("rect")
+				graph.append("rect")
 					  .attr("id","backgroundRect")
 					  .attr("x", xScale(x0))
 					  .attr("y", yScale(yN))
-					  .attr("width",(w-padding)-(padding))
-					  .attr("height",(h-padding)-(padding))
+					  .attr("width",(w-leftAxisTitle)-(leftAxisTitle))
+					  .attr("height",(h-graphTitleHeight)-(bottomAxisTitle))
 	  
 	  
 				//Drawing lines on graph
-				lines= svg.append("g")
+				lines= graph.append("g")
 							  .attr("id","lines")
 	  
 				verticals= lines.append("g")
@@ -125,32 +129,61 @@
 						  })
 	  
 				//Drawing the axes
-				svg.append("g")
-					.attr("class", "axis")
-					.attr("id","xAxis")
-					.attr("transform", "translate("+0+"," + yScale(xAxisLoc) + ")")
-					.call(xAxis);
-				svg.append("g")
-					.attr("class", "axis")
-					.attr("id","yAxis")
-					.attr("transform", "translate("+ xScale(yAxisLoc) +"," + 0 + ")")
-					.call(yAxis);	
-
-
-				var teamGroupDict= {}
+				graph.append("g")
+						.attr("class", "axis")
+						.attr("id","xAxis")
+						.attr("transform", "translate("+0+"," + yScale(xAxisLoc) + ")")
+						.call(xAxis);
+				graph.append("g")
+						.attr("class", "axis")
+						.attr("id","yAxis")
+						.attr("transform", "translate("+ xScale(yAxisLoc) +"," + 0 + ")")
+						.call(yAxis);	
 				
+				//Graph title and axis labels
+				var graphTitle= graph.append("text")
+										.attr("id","graphTitle")
+										.attr("fill","#AAAAAA")
+										.attr("font-size", 50)
+										.attr("x", w/2)
+										.attr("y", graphTitleHeight-20)
+										.attr("text-anchor","middle")
+										.attr("dominant-baseline","bottom")
+										.text("NBA Player ROI");
+				
+				var xAxisLabel= graph.append("text")
+										.attr("id","xAxisLabel")
+										.attr("fill","#AAAAAA")
+										.attr("font-size", 20)
+										.attr("x", w/2)
+										.attr("y", h-bottomAxisTitle + 30)
+										.attr("text-anchor","middle")
+										.attr("dominant-baseline","hanging")
+										.text("Win Share %");
+															
+				var yAxisLabel= graph.append("text")
+										.attr("id","yAxisLabel")
+										.attr("fill","#AAAAAA")
+										.attr("font-size", 20)
+										.attr("x", leftAxisTitle)
+										.attr("y", h/2)
+										.attr("text-anchor","middle")
+										.attr("dominant-baseline","bottom")
+										.attr("transform","rotate(-90,"+(leftAxisTitle-15) +","+ (h/2) +")")
+										.text("Salary %");											
+															
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Create a group of circles for each team
-				groups= svg.selectAll("g#circGroup")
-							.data(playerStatsByTeam)
-							.enter()
-							.append("g")
-							.attr("id","circGroup")
+				var teamGroupDict= {};
 				
-				groups.attr("class", function(d,i) {/*console.log(i);*/return "circs"})
-						.attr("id", function(d) {
-								teamGroupDict[d["team"]]= d3.select(this);
-								return d["team"];
-							})
+				groups= graph.selectAll("g#circGroup")
+								.data(playerStatsByTeam)
+								.enter()
+								.append("g")
+								.attr("class","circGroup")
+								.attr("id", function(d) {
+										teamGroupDict[d["team"]]= d3.select(this);
+										return d["team"];
+									})
 				
 				//Add circles to each group
 				groups.selectAll("circle")
@@ -170,7 +203,6 @@
 						.on("click",function(d) {
 								setProfile(d);
 							})
-						
 				
 				
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Create toggle and toggle functionality
@@ -196,22 +228,36 @@
 																.attr("fill",function(d){return colors[d3.select(this.parentNode).attr("id")];})
 				}
 				
+				//Toggle variables
+				togButtonWidth= 55;
+				togButtonHeight= 35;
+				togButtonRad= 5;
+				togMargin_x= 30;
+				togMargin_y= padding;
+				togButtonPad_x= 5;
+				togButtonPad_y= 10;
+				confTitleSize= 36;
+				confTitlePad= 10;
+				confTitle= confTitleSize + confTitlePad;
+				east_west_pad= 35;
+				eastStart= togMargin_y;
+				westStart= togMargin_y + confTitle + 4*togButtonPad_y + 5*togButtonHeight + east_west_pad; //261
 				
 				/*Conference titles*/
 				toggle.append("text")
 						.attr("fill","#AAAAAA")
-						.attr("font-size", 36)
-						.attr("x",90+27.5)
-						.attr("y",padding)
+						.attr("font-size", confTitleSize)
+						.attr("x", togMargin_x + 1.5*togButtonWidth + togButtonPad_x)
+						.attr("y", eastStart)
 						.attr("text-anchor","middle")
 						.attr("dominant-baseline","hanging")
 						.text("EAST")
 						
 				toggle.append("text")
 						.attr("fill","#AAAAAA")
-						.attr("font-size", 36)
-						.attr("x",90+27.5)
-						.attr("y",padding + 315)
+						.attr("font-size", confTitleSize)
+						.attr("x", togMargin_x + 1.5*togButtonWidth + togButtonPad_x)
+						.attr("y", westStart)
 						.attr("text-anchor","middle")
 						.attr("dominant-baseline","hanging")
 						.text("WEST")
@@ -221,26 +267,25 @@
 										.data(playerStatsByTeam)
 										.enter()
 										.append("g")
+										.attr("id", function(d){ return d["team"];})
 										.attr("class","toggleButton")
 										.style("cursor","pointer")
 										.on("click",function(d){zoomTeamDots(d["team"]);});
-				
-				var confTitleHeight= 45;		
-				
+								
 				toggleButtons.append("rect")
 								.attr("fill", function(d){return colors[d["team"]];})
-								.attr("x",function(d,i){return 30 + 60*Math.floor((i%15)/5);})
-								.attr("y",function(d,i){return confTitleHeight + padding + 65*Math.floor(i/15) + 50*(5*Math.floor(i/15)+(i%15)%5);})
-								.attr("rx", 5)
-								.attr("ry", 5)
-								.attr("width",55)
-								.attr("height",35)
+								.attr("x",function(d,i){return togMargin_x + (togButtonWidth+togButtonPad_x)*Math.floor((i%15)/5);})
+								.attr("y",function(d,i){return confTitle + (eastStart*(i<15) + westStart*(i>=15)) + (togButtonHeight+togButtonPad_y)*((i%15)%5);}) 
+								.attr("rx", togButtonRad)
+								.attr("ry", togButtonRad)
+								.attr("width", togButtonWidth)
+								.attr("height", togButtonHeight)
 				
 				toggleButtons.append("text")
 								.attr("fill","white")
 								.attr("font-size", 12)
-								.attr("x",function(d,i){return 57.5 + 60*Math.floor((i%15)/5);})
-								.attr("y",function(d,i){return confTitleHeight + padding + 17.5 + 65*Math.floor(i/15) + 50*(5*Math.floor(i/15)+(i%15)%5);})
+								.attr("x",function(d,i){return togMargin_x + (togButtonWidth+togButtonPad_x)*Math.floor((i%15)/5) + togButtonWidth/2;})
+								.attr("y",function(d,i){return confTitle + (eastStart*(i<15) + westStart*(i>=15)) + (togButtonHeight+togButtonPad_y)*((i%15)%5) + togButtonHeight/2;}) 
 								.attr("text-anchor","middle")
 								.attr("dominant-baseline","central")
 								.text(function(d){return d["team"];})
