@@ -207,14 +207,17 @@
 								setProfile(d);
 							})
 						.on("mouseover",function() {d3.select(this).attr("fill","magenta").moveToFront();})
-						.on("mouseout",function() {d3.select(this).attr("fill", function() {
-																					if (d3.select(this).attr("r")!=3) {
-																						return colors[d3.select(this.parentNode).attr("id")];
-																					}
-																					else {
-																						return "#777777";
-																					}
-																				})});
+						.on("mouseout",function() {
+											d3.select(this)
+											  .attr("fill", function() {
+																if (d3.select(this).attr("r")!=3) {
+																	return colors[d3.select(this.parentNode).attr("id")];
+																}
+																else {
+																	return "#777777";
+																}
+															})
+										});
 				
 				
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Create toggle and toggle functionality
@@ -225,16 +228,8 @@
 					});
 				  };
 				  
-				d3.selection.prototype.moveToBack = function() { 
-					return this.each(function() { 
-						var firstChild = this.parentNode.firstChild; 
-						if (firstChild) { 
-							this.parentNode.insertBefore(this, firstChild); 
-						} 
-					}); 
-				};
 				
-				function unZoomAllDots(teamName) {
+				function unZoomDots(teamName) {
 					groups.selectAll("circle:not(."+teamGroupDict[teamName].attr("id")+")")
 							.attr("fill","#777777")
 					groups.selectAll("circle:not(."+teamGroupDict[teamName].attr("id")+")")		
@@ -243,13 +238,12 @@
 				}
 				
 				function zoomTeamDots(teamName) {
-					unZoomAllDots(teamName);
+					unZoomDots(teamName);
 					teamGroup= teamGroupDict[teamName];
-					teamGroup.selectAll("circle."+teamGroupDict[teamName].attr("id"))
-							   .transition().delay(0).duration(500).attr("fill",function(d){return colors[d3.select(this.parentNode).attr("id")];})
-																	.attr("r", 10)
-					teamGroup.transition().delay(5000)
 					teamGroup.moveToFront();
+					teamGroup.selectAll("circle."+teamGroupDict[teamName].attr("id"))
+							   .transition().delay(0).duration(500).attr("r", 10)
+																.attr("fill",function(d){return colors[d3.select(this.parentNode).attr("id")];})									
 				}
 				
 				//Toggle variables
