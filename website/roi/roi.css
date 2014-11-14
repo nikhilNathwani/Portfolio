@@ -1,3 +1,12 @@
+html,body {
+	background-color: #fdf5e6;
+}
+
+text {
+	font-family: Georgia;
+	letter-spacing: 2px;
+}
+
 #graph {
 	float: left;
 }
@@ -15,17 +24,17 @@
     stroke: black;
     shape-rendering: crispEdges;
 }
-
+			
 .axis text {
-    font-family: sans-serif;
+    font-family: serif;
     font-size: 15px;
 }
 
 #lines {
 	stroke-width: 2;
-	stroke: #eeeeee;
+	stroke: #ffffff;
 }
 
 #backgroundRect {
-	fill: #cccccc;
+	fill: #fdf5e6;
 }

@@ -5,22 +5,6 @@
         <title>ROI</title>
 		<link type="text/css" rel="stylesheet" href="roi.css"/>
         <script type="text/javascript" src="../d3/d3.js"></script>
-        <style type="text/css">
-			text {
-			    font-family: Verdana;
-			}
-			
-			.axis line {
-			    fill: none;
-			    stroke: black;
-			    shape-rendering: crispEdges;
-			}
-			
-			.axis text {
-				font-family: sans-serif;
-				font-size: 11px;
-			}
-		</style>
     </head>
     <body>
 		<div id="toggle"></div>
@@ -28,8 +12,8 @@
 		<div id="profiles"></div>
         <script type="text/javascript">
             
-			w= 700;
-            h= 700;
+			w= 650;
+            h= 650;
 			
 			//Graph variables
 			x0= -10;
@@ -41,7 +25,7 @@
 			padding= 50;
 			t= 5;
 			graphTitleHeight= 100;
-			leftAxisTitle= 100;
+			leftAxisTitle= 60;
 			bottomAxisTitle= 100;
 			
 			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#25799A", "CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6", "GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583", "MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A", "NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31", "POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
@@ -61,7 +45,7 @@
 			//Player Profle SVG
 			profiles= d3.select("#profiles")
 						.append("svg")
-						.attr("width","300")
+						.attr("width","250")
 						.attr("height",h)
 						
             d3.json("roi.json", function(playerStatsByTeam) {
@@ -251,9 +235,9 @@
 				togButtonHeight= 35;
 				togButtonRad= 5;
 				togMargin_x= 30;
-				togMargin_y= padding;
+				togMargin_y= 50;
 				togButtonPad_x= 5;
-				togButtonPad_y= 10;
+				togButtonPad_y= 5;
 				confTitleSize= 36;
 				confTitlePad= 10;
 				confTitle= confTitleSize + confTitlePad;
@@ -302,6 +286,7 @@
 				toggleButtons.append("text")
 								.attr("fill","white")
 								.attr("font-size", 12)
+								.attr("font-family","serif")
 								.attr("x",function(d,i){return togMargin_x + (togButtonWidth+togButtonPad_x)*Math.floor((i%15)/5) + togButtonWidth/2;})
 								.attr("y",function(d,i){return confTitle + (eastStart*(i<15) + westStart*(i>=15)) + (togButtonHeight+togButtonPad_y)*((i%15)%5) + togButtonHeight/2;}) 
 								.attr("text-anchor","middle")
