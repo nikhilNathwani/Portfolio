@@ -19,6 +19,10 @@ text {
 	float: left;
 }
 
+#teamBlurb {
+	float: left;
+}
+
 .axis path, .axis line {
     fill: none;
     stroke: black;
