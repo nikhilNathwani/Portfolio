@@ -22,7 +22,7 @@
 			var colors= {"ATL":"#D21033", "BOS":"#05854C", "BRK":"#000000", "CHA":"#25799A",
 			"CHI":"#D4001F", "CLE":"#9F1425", "DAL":"#006AB5", "DEN":"#4393D1", "DET":"#006BB6",
 			"GSW":"#FFC33C", "HOU":"#CC0000", "IND":"#FFC225", "LAC":"#EE2944", "LAL":"#4A2583",
-			"MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP": "#091D4A",
+			"MEM":"#85A2C6", "MIA":"#B62630", "MIL":"#00330A", "MIN":"#12397F", "NOP":"#091D4A",
 			"NYK":"#2E66B2", "OKC":"#0075C1", "ORL":"#077ABD", "PHI":"#C7974D", "PHO":"#FF7A31",
 			"POR":"#E1393E", "SAC":"#743389", "SAS":"#BEC8C9", "TOR":"#CD1041", "UTA":"#448CCE", "WAS":"#004874"}
 
@@ -367,11 +367,19 @@
 				//Player Profle SVG
 				profiles= d3.select("#profiles")
 							.append("svg")
-							.attr("width","250")
+							.attr("width", 300)
 							.attr("height",200)
 							
 				stats= ["Name","Win Share %","Salary %"]
 				statsToID= {"Name":"name","Win Share %":"ws","Salary %":"salary"}
+				
+				profiles.append("image")
+						.attr('x',-50)
+						.attr('y',0)
+						.attr('width', "60%")
+						.attr('height', "60%")
+						//.attr("xlink:href","cp3")
+				
 				profiles.selectAll("text")
 						.data(stats)
 						.enter()
@@ -380,13 +388,14 @@
 						.attr("fill","grey")
 						.attr("font-size",16)
 						.attr("dominant-baseline","hanging")
-						.attr("x",30)
+						.attr("x",100)
 						.attr("y",function(d,i){return padding + i*30;});
 					
 				function setProfile(player) {
 					profiles.select("#name").text("Name: " + player["name"]);
 					profiles.select("#ws").text("Win Share %: " + parseFloat(player["ws"]).toFixed(3));
 					profiles.select("#salary").text("Salary %: " + parseFloat(player["salary"]).toFixed(3));
+					profiles.select("image").transition().delay(0).duration(500).attr("xlink:href","playerPics/"+player["img"])
 				}
 				
 				
